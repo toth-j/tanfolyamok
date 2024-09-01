@@ -42,5 +42,5 @@ Az adatokat egy adatbázisban kell tárolni, amelyet egy API-n keresztül lehet 
 
 Ezen kívül kell egy felület, ahol az iskola dolgozója kezelheti a képzések, csoportok és jelentkezők adatait az API-n keresztül. Erre a felületre jelszó megadásával lehessen bejelentkezni. A dolgozónak létrehozni, módosítani és törölni is kell tudni az adatokat.
 
-[Dokumentáció](https://1drv.ms/w/s!AlIAXMnqUwOHgr4vxjeV05sTUD9xKw?e=NJEggz)
+[Dokumentáció](https://1drv.ms/w/s!AlIAXMnqUwOHgr5N2Fxr6NreM2gf9w?e=LxgMKl)
 
