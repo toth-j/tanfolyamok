@@ -38,7 +38,7 @@ A feladat olyan webalkalmazás készítése, amelyben a látogatók tájékozód
 
 Az alkalmazásnak reszponzívnak kell lennie, hogy asztali és mobil böngészőben is használható legyen.
 
-Az adatokat egy adatbázisban kell tárolni, amelyet egy API-n keresztül lehet elérni. Az elkészített alkalmazás ezt az API-t hnja az adatok letöltéséhez és módosításához.
+Az adatokat egy adatbázisban kell tárolni, amelyet egy API-n keresztül lehet elérni. Az elkészített alkalmazás ezt az API-t hívja az adatok letöltéséhez és módosításához.
 
 Ezen kívül kell egy felület, ahol az iskola dolgozója kezelheti a képzések, csoportok és jelentkezők adatait az API-n keresztül. Erre a felületre jelszó megadásával lehessen bejelentkezni. A dolgozónak létrehozni, módosítani és törölni is kell tudni az adatokat.
 
