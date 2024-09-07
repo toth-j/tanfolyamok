@@ -17,7 +17,7 @@ A csoportokról a következő adatokat kell tárolni:
 - indulás dátuma
 - órák ideje (pl. szombatonként 10-16 óráig)
 - órák helyszíne (tanterem vagy online)
-- ár
+- képzés ára
 
 A jelentkezők kezelendő adatai:
 
