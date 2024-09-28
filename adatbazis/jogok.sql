@@ -1,0 +1,2 @@
+GRANT USAGE ON *.* TO `tanf-szervezo`@`localhost` IDENTIFIED BY PASSWORD '*376713FEDEB1244E88C055A55A3372C412957D96';
+GRANT SELECT, INSERT, UPDATE, DELETE ON `tanfolyamok`.* TO `tanf-szervezo`@`localhost`;
