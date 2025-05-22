@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="hu">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Módosítás</title>
+    <link rel="stylesheet" href="bootstrap.min.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <div class="container">
+        <button class="button btn-outline-primary my-3" id="kijelentkezes">Kijelentkezés</button>
+        <button class="button btn-primary my-3" id="vissza">Vissza</button>
+        <h1>Csoport azonosító: <span id="csid"></span></h1>
+        <form action="" method="post" class="p-3 mb-3">
+            <div class="row">
+                <div class="col-lg-6">
+                    <label for="kepzes" class="form-label">Képzés:</label>
+                    <select name="kepzes" id="kepzes" class="form-control">
+                        <option value="1">1-Frontend</option>
+                        <option value="2">2-Backend</option>
+                        <option value="3">3-Fullstack</option>
+                    </select>
+                    <label for="datum" class="form-label">Indulás:</label>
+                    <input type="date" name="datum" id="datum" class="form-control">
+                    <label for="beosztas" class="form-label">Beosztás:</label>
+                    <input type="text" name="beosztas" id="beosztas" class="form-control">
+                    <label for="helyszin" class="form-label">Helyszín:</label>
+                    <input type="text" name="helyszin" id="helyszin" class="form-control">
+                    <label for="ar" class="form-label">Ár:</label>
+                    <input type="text" name="ar" id="ar" class="form-control">
+                    <button type="button" id="modosit" class="button btn-primary mt-3">Módosítás</button>
+                </div>
+            </div>
+        </form>
+
+        <script src="bootstrap.bundle.min.js"></script>
+        <script src="modosit.js"></script>
+    </div>
+</body>
+
+</html>

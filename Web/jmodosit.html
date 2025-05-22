@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="hu">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>jelentkező módosítás</title>
+    <link rel="stylesheet" href="bootstrap.min.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <div class="container">
+        <button class="button btn-outline-primary my-3" id="kijelentkezes">Kijelentkezés</button>
+        <button class="button btn-primary my-3" id="vissza">Vissza</button>
+        <h1>Jelentkező azonosító: <span id="jid"></span></h1>
+        <form>
+            <div class="row">
+                <div class="col-lg-6">
+                    <label for="jnev" class="form-label">Név: </label>
+                    <input type="text" id="jnev" name="jnev" class="form-control" required>
+                    <label for="szulnev" class="form-label">Születési név: </label>
+                    <input type="text" id="szulnev" name="szulnev" class="form-control">
+                    <label for="szulido" class="form-label">Születési idő: </label>
+                    <input type="date" id="szulido" name="szulido" class="form-control">
+                    <label for="szulhely" class="form-label">Születési hely: </label>
+                    <input type="text" id="szulhely" name="szulhely" class="form-control">
+                </div>
+                <div class="col-lg-6">
+                    <label for="anyjaneve" class="form-label">Anyja neve: </label>
+                    <input type="text" id="anyjaneve" name="anyjaneve" class="form-control">
+                    <label for="cim" class="form-label">Cím: </label>
+                    <input type="text" id="cim" name="cim" class="form-control">
+                    <label for="telefon" class="form-label">Telefon: </label>
+                    <input type="tel" id="telefon" name="telefon" class="form-control" required>
+                    <label for="email" class="form-label">E-mail: </label>
+                    <input type="email" id="email" name="email" class="form-control" required>
+                </div>
+            </div>
+            <button type="button" id="modosit" class="button btn-primary mt-3 me-3">Módosítás</button>
+            <p id="uzenet" class="text-danger my-3"></p>
+        </form>
+
+        <script src="bootstrap.bundle.min.js"></script>
+        <script src="jmodosit.js"></script>
+    </div>
+</body>
+
+</html>

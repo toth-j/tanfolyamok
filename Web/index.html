@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="hu">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tanfolyamok</title>
+    <link rel="stylesheet" href="bootstrap.min.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <header class="text-center text-light bg-success py-2">
+        <h1>Pogány Frigyes Technikum</h1>
+        <h2>Esti és hétvégi képzések</h2>
+    </header>
+    <nav class="navbar navbar-expand-md navbar-dark bg-dark py-0">
+        <button class="navbar-toggler mx-auto" data-bs-toggle="collapse" data-bs-target="#menu">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="menu">
+            <div class="navbar-nav mx-auto text-center">
+                <a class="nav-link mx-2" href="#frontend">Junior frontend fejlesztő</a>
+                <a class="nav-link mx-2" href="#backend">Junior Java backend fejlesztő</a>
+                <a class="nav-link mx-2" href="#fullstack">Junior fullstack fejlesztő</a>
+                <a class="nav-link mx-2" href="#jelentkezes">Jelentkezés</a>
+            </div>
+        </div>
+    </nav>
+    <div class="container">
+        <div class="row my-4" id="frontend">
+            <div class="col-lg">
+                <img src="img/software1.jpg" alt="Hinta" class="img-thumbnail">
+            </div>
+            <div class="col-lg">
+                <h3>Junior frontend fejlesztő</h3>
+                <p>A Junior front-end fejlesztő, szabványos HTML kódokat ír,
+                    szemantikus elemeket használ. A gyakorlatban alkalmazza haladó CSS ismereteit. Reszponzív
+                    weboldalakat készít és a gyakorlatban alkalmazza a mobile-first szemléletmódot. A stílusok
+                    hatékonyabb, gyorsabb megírásához CSS preprocesszort és CSS keretrendszert használ.
+                    JavaScript ismeretei felhasználásával kódolási konvenciókat és a tiszta kód elveket követve,
+                    egyszerűbb algoritmizálási feladatokat old meg. Alkalmazásokat fejleszt JavaScript
+                    keretrendszer/könyvtár segítségével, illetve unit teszteket ír és olvas munkája ellenőrzéséhez.
+                    Verziókövető rendszert használ a csoportos és/vagy egyéni projektjei során.
+                    Rutinszerűen használ egy integrált fejlesztőeszközt.
+                </p>
+                <p><a target="_blank" href="https://api.ikk.hu/storage/uploads/files/06134004_junior_frontend_fejleszto_modpdf-1628174996556.pdf">Követelmények</a></p>
+            </div>
+        </div>
+        <div class="row my-4" id="backend">
+            <div class="col-lg">
+                <h3>Junior Java backend fejlesztő</h3>
+                <p>A Junior Java backend fejlesztő a Java programozás nyelv használatával a Java osztálykönyvtárakat,
+                    a kódolási konvenciókat, az objektumorientált és a tiszta kód elveket, egyszerűbb
+                    algoritmizálási feladatokat old meg. Munkája ellenőrzéséhez unit teszteket ír , olvas és
+                    kiértékeli azokat. A Junior Java backend fejlesztő verziókövető rendszert használ a csoportos
+                    és/vagy egyéni projektjei során. Buildelésre folyamatos integrációs eszközt (CI/CD) használ.
+                    A Java programokból kiadja az SQL utasítások, melyhez ismeri az SQL nyelv alapjait.
+                    Programozásra integrált fejlesztőeszközt (IDE) használ.
+                </p>
+                <p><a target="_blank" href="https://api.ikk.hu/storage/uploads/files/06134005_junior_java_backend_fejleszto_modpdf-1628175092739.pdf">Követelmények</a></p>
+            </div>
+            <div class="col-lg">
+                <img src="img/software3.jpg" alt="Hinta" class="img-thumbnail d-none d-lg-block">
+            </div>
+        </div>
+        <div class="row my-3" id="fullstack">
+            <div class="col-lg">
+                <img src="img/software2.jpg" alt="Hinta" class="img-thumbnail d-none d-lg-block">
+            </div>
+            <div class="col-lg">
+                <h3>Junior fullstack fejlesztő</h3>
+                <p>A Junior Fullstack fejlesztő a szoftverfejlesztés munkaterületen belül egy speciális
+                    munkakört képvisel. Munkája során elvégzi a Junior frontend fejlesztő munkakör minden
+                    jellemző feladatát (képes létező API-k kliens-oldali használatára, tesztelésére) <br>
+                    A fentieken felül:</p>
+                <ul>
+                    <li>Saját fejlesztésű API-kat tervez és megír.</li>
+                    <li>Használja a RESTful alapú API szabványokat, valamint az azon alapuló API-tervezés és
+                        dokumentáció-generálás folyamatát és eszközeit.</li>
+                    <li>Elvégzi a szolgáltatásokhoz és erőforrásokhoz való hozzáférés jogosultságokhoz kötött
+                        szabályozását.</li>
+                    <li>Tisztában van a NoSQL megoldások alapvető fajtáival és használati módjaival, tisztában van azok
+                        előnyeivel és hátrányaival. A NoSQL megoldásokat célszerűen alkalmazza.</li>
+                    <li>Ismeri a konténerizációs technológia előnyeit, és képes annak segítségével az API-t
+                        kiszolgáló és felhasználó alkalmazásokat publikálni.</li>
+                </ul>
+                <p><a target="_blank" href="https://api.ikk.hu/storage/uploads/files/06135010_junior_fullstack_api_pkpdf-1622538598156.pdf">Követelmények</a></p>
+            </div>
+        </div>
+        <div class="row" id="jelentkezes">
+            <div>
+                <h3>Induló csoportok</h3>
+                <table class="table table-striped">
+                    <tbody id="csoportok">
+                        <!-- csoportok adatai -->
+                    </tbody>
+                </table>
+            </div>
+
+            <div>
+                <h3 class="mt-3">Jelentkezés</h3>
+                <form>
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <label for="csid" class="form-label">Csoport azonosítója: </label>
+                            <input type="text" id="csid" name="csid" class="form-control" required>
+                            <label for="jnev" class="form-label">Név: </label>
+                            <input type="text" id="jnev" name="jnev" class="form-control" required>
+                            <label for="szulnev" class="form-label">Születési név: </label>
+                            <input type="text" id="szulnev" name="szulnev" class="form-control">
+                            <label for="szulido" class="form-label">Születési idő: </label>
+                            <input type="date" id="szulido" name="szulido" class="form-control">
+                            <label for="szulhely" class="form-label">Születési hely: </label>
+                            <input type="text" id="szulhely" name="szulhely" class="form-control">
+                        </div>
+                        <div class="col-lg-6">
+                            <label for="anyjaneve" class="form-label">Anyja neve: </label>
+                            <input type="text" id="anyjaneve" name="anyjaneve" class="form-control">
+                            <label for="cim" class="form-label">Cím: </label>
+                            <input type="text" id="cim" name="cim" class="form-control">
+                            <label for="telefon" class="form-label">Telefon: </label>
+                            <input type="tel" id="telefon" name="telefon" class="form-control" required>
+                            <label for="email" class="form-label">E-mail: </label>
+                            <input type="email" id="email" name="email" class="form-control" required>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <div class="form-check mt-3">
+                                    <input type="checkbox" class="form-check-input" name="tandij" id="tandij">
+                                    <label for="tandij" class="form-check-label">Vállalom a tandíj befizetését.</label>
+                                </div>
+                                <p id="uzenet" class="text-danger mt-3"></p>
+                                <button type="button" id="gomb" class="button btn-primary btn-lg my-3">Jelentkezem</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+
+            </div>
+
+        </div>
+    </div>
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-md">
+                    <p>BKSZC Pogány Frigyes Technikum<br>
+                        1183 Budapest, Thököly út 11.<br>
+                        Tel.: 1/290-0642</p>
+                </div>
+                <div class="col-md">
+                    <a class="link-light" href="#frontend">Junior frontend fejlesztő;</a><br>
+                    <a class="link-light" href="#backend">Junior Java backend fejlesztő</a><br>
+                    <a class="link-light" href="#fullstack">Junior fullstack fejlesztő</a><br>
+                    <a class="link-light" href="#jelentkezes">Jelentkezés</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <form class="container my-3" id="bejelentkezes" 
+          action="localhost:5000/admin" method="post">
+        <label>Adminisztrátor jelszó: 
+            <input type="password" name="password" id="password">
+        </label>
+        <button type="button" id="login">Bejelentkezés</button>
+        <p id="uzenet2" class="text-danger">&nbsp;</p>
+    </form>
+    <script src="bootstrap.bundle.min.js"></script>
+    <script src="index.js"></script>
+</body>
+
+</html>
