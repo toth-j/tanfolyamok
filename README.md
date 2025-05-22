@@ -14,3 +14,4 @@ Ezen kívül kell egy felület, ahol az iskola dolgozója feltöltheti a képzé
 
 [Dokumentáció](https://docs.google.com/document/d/12LFna0nQLgA2uY5c6qSiW-yEb5Agfj1PD7G6iUYhTAY/edit?usp=sharing)
 
+# tanfolyamok
