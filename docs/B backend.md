@@ -29,7 +29,12 @@ Ez a dokumentum a Tanfolyamkezelő Rendszer backend API-jának fejlesztői dokum
         * [GET /admin/lista/:csid](#get-adminlistacsid)
         * [GET /admin/jelentkezok/:jid](#get-adminjelentkezokjid)
         * [PUT /admin/jelentkezok/:jid](#put-adminjelentkezokjid)
-        * [DELETE /admin/jelentkezok/:jid](#delete-adminjelentkezokjid)]
+        * [DELETE /admin/jelentkezok/:jid](#delete-adminjelentkezokjid)
+6. [Tesztelés](#6-tesztelés)
+    * [Előfeltételek a teszteléshez](#előfeltételek-a-teszteléshez)
+    * [Tesztfájlok](#tesztfájlok)
+    * [Tesztek futtatása](#tesztek-futtatása)
+    * [Tesztesetek felépítése](#tesztesetek-felépítése)
 
 ## 1. Bevezetés
 
@@ -432,3 +437,43 @@ Minden Admin API végpont JWT token authentikációt igényel (lásd: Authentik�
   * `404 Not Found`: `{ "message": "Jelentkező nem található." }`
   * `401 Unauthorized` / `403 Forbidden`
   * `500 Internal Server Error`: `{ "message": "Adatbázis hiba történt a jelentkező törlésekor." }`
+
+## 6. Tesztelés
+
+Az API végpontok teszteléséhez `.http` fájlok állnak rendelkezésre, amelyeket a Visual Studio Code REST Client kiegészítőjével lehet futtatni.
+
+### Előfeltételek a teszteléshez
+
+1. **Futó backend szerver**: Az `app.js` alkalmazásnak futnia kell (pl. `node app.js`), és elérhetőnek kell lennie a `http://localhost:5000` címen.
+2. **Inicializált adatbázis**: A `tanfolyamok.db` adatbázisnak léteznie kell, és a `tesztadatok.sql` fájlban lévő adatokkal feltöltve kell lennie. Ha az adatbázis üres vagy hiányzik, az alkalmazás indításkor létrehozza a sémát, de a tesztadatokat manuálisan kell betölteni:
+
+    ```bash
+    sqlite3 tanfolyamok.db < tesztadatok.sql
+    ```
+
+3. **Konfigurált `.env` fájl**: Az adminisztrátori API teszteléséhez a `.env` fájlnak tartalmaznia kell a `ADMIN` (bcrypt hash) és `TOKEN_SECRET` változókat. A `tesztadatok.sql` és az `admin_api.http` fájlban az alapértelmezett admin jelszó `TanfAdmin!2025`. Ennek a hash-elt változatának kell szerepelnie az `ADMIN` változóban.
+
+### Tesztfájlok
+
+* `public_api.http`: A publikus API végpontjainak teszteseteit tartalmazza.
+* `admin_api.http`: Az adminisztrációs API végpontjainak teszteseteit tartalmazza.
+
+### Tesztek futtatása
+
+1. Telepítse a REST Client kiterjesztést a VS Code-ban (ha szükséges).
+2. Nyissa meg a `public_api.http` vagy `admin_api.http` fájlt.
+3. Minden kérés felett megjelenik egy "Send Request" link. Kattintson erre a linkre a kérés elküldéséhez.
+4. A válasz egy új ablakban vagy panelen jelenik meg.
+
+### Tesztesetek felépítése
+
+Minden teszteset a `.http` fájlokban a következőképpen van strukturálva:
+
+* Egy vagy több sor komment (`#`), amely leírja a teszt célját és az elvárt eredményt.
+* A HTTP kérés (pl. `GET {{baseUrl}}/public/csoportok`).
+* Szükség esetén fejlécek (pl. `Content-Type: application/json`, `Authorization: Bearer {{authToken}}`).
+* Szükség esetén request body (JSON formátumban).
+* A `###` szeparátor választja el az egyes kéréseket.
+* Az `admin_api.http` fájl változókat használ (`@baseUrl`, `@authToken`, `@ujCsoportId`) a kérések dinamikusabbá tételéhez és az értékek átadásához a tesztek között. Az `@authToken` például az admin bejelentkezési kérés válaszából kerül kinyerésre.
+
+A tesztek sorrendje fontos, különösen az `admin_api.http` fájlban, ahol egy későbbi teszt egy korábbi teszt által létrehozott erőforráson (pl. új csoport) végezhet műveleteket. Javasolt a teszteket a fájlban megadott sorrendben futtatni, különösen az első alkalommal vagy az adatbázis frissítése után.
