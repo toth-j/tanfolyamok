@@ -1,64 +1,75 @@
 const jid = sessionStorage.jid
 document.getElementById("jid").innerHTML = jid
-const token = 'Bearer: ' + sessionStorage.token
+const token = 'Bearer ' + sessionStorage.token
 betolt()
 
-function betolt() {
+async function betolt() { // Függvény async-ként jelölve
     const url = 'http://localhost:5000/admin/jelentkezok/' + jid;
-    fetch(url, {
-        method: 'GET',
-        headers: {
-            'Authorization': token
+    try {
+        const response = await fetch(url, {
+            method: 'GET',
+            headers: {
+                'Authorization': token
+            }
+        });
+        if (!response.ok) {
+            throw new Error(`Hiba! Státusz: ${response.status}`);
         }
-    })
-        .then((response) => response.json())
-        .then(json => {
-            let jel = json[0]
-            document.getElementById("jnev").value = jel.jnev
-            document.getElementById("szulnev").value = jel.szulnev
-            document.getElementById("szulido").value = jel.szulido
-            document.getElementById("szulhely").value = jel.szulhely
-            document.getElementById("anyjaneve").value = jel.anyjaneve
-            document.getElementById("cim").value = jel.cim
-            document.getElementById("telefon").value = jel.telefon
-            document.getElementById("email").value = jel.email
-        })
-        .catch(err => console.log(err));
+        const json = await response.json();
+        document.getElementById("jnev").value = json.jnev;
+        document.getElementById("szulnev").value = json.szulnev || '';
+        document.getElementById("szulido").value = json.szulido;
+        document.getElementById("szulhely").value = json.szulhely;
+        document.getElementById("anyjaneve").value = json.anyjaneve;
+        document.getElementById("cim").value = json.cim;
+        document.getElementById("telefon").value = json.telefon;
+        document.getElementById("email").value = json.email;
+    } catch (err) {
+        console.error("Hiba a jelentkező adatainak betöltésekor:", err);
+        alert(`Hiba történt a jelentkező adatainak betöltésekor: ${err.message}.`);
+    }
 }
 
-document.getElementById("modosit").onclick = function (e) {
+document.getElementById("modosit").onclick = async function (e) {
     const url = 'http://localhost:5000/admin/jelentkezok/' + jid;
-    console.log(token)
-    fetch(url, {
-        method: 'PUT',
-        headers: {
-            'Content-type': 'application/json;charset=utf-8',
-            'Authorization': token
-        },
-        body: JSON.stringify({
-            "csid": sessionStorage.csid,
-            "jnev": document.getElementById("jnev").value,
-            "szulnev": document.getElementById("szulnev").value,
-            "szulido": document.getElementById("szulido").value,
-            "szulhely": document.getElementById("szulhely").value,
-            "anyjaneve": document.getElementById("anyjaneve").value,
-            "cim": document.getElementById("cim").value,
-            "telefon": document.getElementById("telefon").value,
-            "email": document.getElementById("email").value
-        })
-    })
-        .then(res => {
-            document.location = "jelentkezok.html"
-        })
-        .catch(err => console.log(err));
-}
+    const payload = {
+        "csid": Number(sessionStorage.csid),
+        "jnev": document.getElementById("jnev").value,
+        "szulnev": document.getElementById("szulnev").value,
+        "szulido": document.getElementById("szulido").value,
+        "szulhely": document.getElementById("szulhely").value,
+        "anyjaneve": document.getElementById("anyjaneve").value,
+        "cim": document.getElementById("cim").value,
+        "telefon": document.getElementById("telefon").value,
+        "email": document.getElementById("email").value
+    };
+    try {
+        const response = await fetch(url, {
+            method: 'PUT',
+            headers: {
+                'Content-type': 'application/json;charset=utf-8',
+                'Authorization': token
+            },
+            body: JSON.stringify(payload)
+        });
+        const responseData = await response.json();
+        if (!response.ok) {
+            alert(`Hiba a módosítás során: ${responseData.message || response.status}`);
+            console.error("Szerverhiba a módosításkor:", response.status, responseData);
+        } else {
+            document.location.href = "jelentkezok.html"
+        }
+    } catch (err) {
+        console.error("Hiba a jelentkező módosításakor (hálózati/kliens oldali):", err);
+        alert(`Hiba történt a módosítás közben: ${err.message}. Kérjük, ellenőrizze a hálózati kapcsolatot.`);
+    }
+};
 
 document.getElementById("kijelentkezes").onclick = function () {
     delete sessionStorage.token
-    document.location = "index.html"
+    document.location.href = "index.html"
 }
 
 document.getElementById("vissza").onclick = function () {
-    document.location = "jelentkezok.html"
+    document.location.href = "jelentkezok.html"
 }
-

@@ -2,56 +2,74 @@ const csid = sessionStorage.csid
 document.getElementById("csid").innerHTML = csid
 betolt()
 
-function betolt() {
-    const url = 'http://localhost:5000/admin/csoportok/' + csid;
-    const token = 'Bearer: ' + sessionStorage.token
-    fetch(url, {
-        method: 'GET',
-        headers: {
-            'Authorization': token
+async function betolt() {
+    const url = `http://localhost:5000/admin/csoportok/${csid}`;
+    const token = 'Bearer ' + sessionStorage.token;
+    try {
+        const response = await fetch(url, {
+            method: 'GET',
+            headers: {
+                'Authorization': token
+            }
+        });
+        if (!response.ok) {
+            throw new Error(response.status);
         }
-    })
-        .then((response) => response.json())
-        .then(json => {
-            let csoport = json[0]
-            document.getElementById("kepzes").selectedIndex = csoport.kid-1
-            document.getElementById("datum").value = csoport.indulas
-            document.getElementById("beosztas").value = csoport.beosztas
-            document.getElementById("helyszin").value = csoport.helyszin
-            document.getElementById("ar").value = csoport.ar
-        })
-        .catch(err => console.log(err));
+        const json = await response.json();
+        document.getElementById("kepzes").selectedIndex = json.kid - 1;
+        document.getElementById("datum").value = json.indulas;
+        document.getElementById("beosztas").value = json.beosztas;
+        document.getElementById("helyszin").value = json.helyszin;
+        document.getElementById("ar").value = json.ar;
+    } catch (err) {
+        console.error("Hiba a csoportadatok betöltésekor:", err.message);
+        alert(`Hiba a csoportadatok betöltésekor: ${err.message}. Kérjük, ellenőrizze a kapcsolatot vagy próbálja újra később.`);
+    }
 }
 
-document.getElementById("modosit").onclick = function (e) {
-    const url = 'http://localhost:5000/admin/csoportok/' + csid;
-    const token = 'Bearer: ' + sessionStorage.token
-    fetch(url, {
-        method: 'PUT',
-        headers: {
-            'Content-type': 'application/json;charset=utf-8',
-            'Authorization': token
-        },
-        body: JSON.stringify({
-            "kid": document.getElementById("kepzes").value,
-            "indulas": document.getElementById("datum").value,
-            "beosztas": document.getElementById("beosztas").value,
-            "helyszin": document.getElementById("helyszin").value,
-            "ar": document.getElementById("ar").value
-        })
-    })
-        .then(res => {
-            document.location = "csoportok.html"
-        })
-        .catch(err => console.log(err));
-}
+document.getElementById("modosit").onclick = async function (e) {
+    const url = `http://localhost:5000/admin/csoportok/${csid}`;
+    const token = 'Bearer ' + sessionStorage.token;
+
+    const kidValue = document.getElementById("kepzes").value;
+    const indulasValue = document.getElementById("datum").value;
+    const beosztasValue = document.getElementById("beosztas").value.trim();
+    const helyszinValue = document.getElementById("helyszin").value.trim();
+    const arValue = document.getElementById("ar").value.trim();
+
+    const payload = {
+        "kid": parseInt(kidValue, 10),
+        "indulas": indulasValue,
+        "beosztas": beosztasValue,
+        "helyszin": helyszinValue,
+        "ar": arValue
+    };
+
+    try {
+        const response = await fetch(url, {
+            method: 'PUT',
+            headers: {
+                'Content-type': 'application/json;charset=utf-8',
+                'Authorization': token
+            },
+            body: JSON.stringify(payload)
+        });
+        if (!response.ok) {
+            const errorData = await response.json().catch(() => ({ message: `Szerverhiba: ${response.statusText}` }));
+            throw new Error(errorData.message || `HTTP hiba! Státusz: ${response.status}`);
+        }
+        document.location.href = "csoportok.html";
+    } catch (err) {
+        console.error("Hiba a csoport módosításakor:", err.message);
+        alert(`Hiba a csoport módosításakor: ${err.message}`);
+    }
+};
 
 document.getElementById("kijelentkezes").onclick = function () {
     delete sessionStorage.token
-    document.location = "index.html"
+    document.location.href = "index.html"
 }
 
 document.getElementById("vissza").onclick = function () {
-    document.location = "csoportok.html"
+    document.location.href = "csoportok.html"
 }
-

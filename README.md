@@ -2,7 +2,7 @@
 
 ## Vizsgaremek
 
-### 2022. május
+### 2025. május
 
 Iskolánk esti és hétvégi informatikai képzéseket szervez, amelyek tantermi és online csoportokban, különböző időpontokban indulnak.
 

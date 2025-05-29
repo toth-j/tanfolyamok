@@ -150,7 +150,7 @@ function authenticateToken(req, res, next) {
 
 // az összes csoport adatainak lekérése
 app.get("/admin/csoportok", authenticateToken, function (req, res) {
-    const q = "SELECT csoportok.csid, kepzesek.knev, indulas, beosztas, ar, "
+    const q = "SELECT csoportok.csid, kepzesek.knev, indulas, beosztas, helyszin, ar, "
         + "COUNT(jelentkezok.jid) AS letszam " 
         + "FROM kepzesek JOIN csoportok ON csoportok.kid=kepzesek.kid "
         + "LEFT JOIN jelentkezok ON csoportok.csid = jelentkezok.csid "
@@ -168,14 +168,17 @@ app.get("/admin/csoportok", authenticateToken, function (req, res) {
 // új csoport hozzáadása
 app.post("/admin/csoportok", authenticateToken, function (req, res) {
     const { kid, indulas, beosztas, helyszin, ar } = req.body;
-    if (kid === undefined || !indulas || !beosztas || !helyszin || ar === undefined) {
+    if (!kid || !indulas || !beosztas || !helyszin || !ar) {
         return res.status(400).send({ message: "Hiányzó kötelező mezők." });
+    }
+    if (ar < 0) {
+        return res.status(400).send({ message: "Az ár nem lehet negatív." });
     }
     const q = "INSERT INTO csoportok (kid, indulas, beosztas, helyszin, ar) "
             + "VALUES(?,?,?,?,?)"
     try {
         const stmt = db.prepare(q);
-        const info = stmt.run(kid, indulas, beosztas, helyszin, ar);
+        const info = stmt.run(Number(kid), indulas, beosztas, helyszin, Number(ar));
         res.status(201).send({ message: "Csoport sikeresen hozzáadva!", id: info.lastInsertRowid, changes: info.changes });
     } catch (error) {
         console.error("Hiba /admin/csoportok létrehozásánál:", error.message);
@@ -193,7 +196,7 @@ app.get("/admin/csoportok/:csid", authenticateToken, function (req, res) {
             + "FROM csoportok WHERE csid=?";
     try {
         const stmt = db.prepare(q);
-        const result = stmt.get(csid);
+        const result = stmt.get(Number(csid));
         if (result) {
             res.status(200).send(result);
         } else {
@@ -209,15 +212,18 @@ app.get("/admin/csoportok/:csid", authenticateToken, function (req, res) {
 app.put("/admin/csoportok/:csid", authenticateToken, function (req, res) {
     const { csid } = req.params;
     const { kid, indulas, beosztas, helyszin, ar } = req.body;
-    if (kid === undefined || !indulas || !beosztas || !helyszin || ar === undefined) {
+    if (!kid || !indulas || !beosztas || !helyszin || !ar) {
         return res.status(400).send({ message: "Hiányzó kötelező mezők." });
+    }
+    if (ar < 0) {
+        return res.status(400).send({ message: "Az ár nem lehet negatív." });
     }
     const q = "UPDATE csoportok "
             + "SET kid=?, indulas=?, beosztas=?, helyszin=?, ar=? "
             + "WHERE csid=?"
     try {
         const stmt = db.prepare(q);
-        const info = stmt.run(kid, indulas, beosztas, helyszin, ar, csid);
+        const info = stmt.run(Number(kid), indulas, beosztas, helyszin, Number(ar), Number(csid));
         if (info.changes > 0) {
             res.status(200).send({ message: "Csoport sikeresen módosítva.", changes: info.changes });
         } else {
@@ -238,7 +244,7 @@ app.delete("/admin/csoportok/:csid", authenticateToken, function (req, res) {
     const q = "DELETE FROM csoportok WHERE csid=?";
     try {
         const stmt = db.prepare(q);
-        const info = stmt.run(csid);
+        const info = stmt.run(Number(csid));
         if (info.changes > 0) {
             res.status(200).send({ message: "Csoport sikeresen törölve.", changes: info.changes });
         } else {
@@ -260,12 +266,12 @@ app.get("/admin/lista/:csid", authenticateToken, function (req, res) {
             + "cim, telefon, email FROM jelentkezok WHERE csid=? ORDER BY jnev";
     try {
         const groupExistsStmt = db.prepare("SELECT 1 FROM csoportok WHERE csid = ?");
-        const group = groupExistsStmt.get(csid);
+        const group = groupExistsStmt.get(Number(csid));
         if (!group) {
             return res.status(404).send({ message: "A megadott csoport nem létezik." });
         }
         const stmt = db.prepare(q);
-        const results = stmt.all(csid);
+        const results = stmt.all(Number(csid));
         res.status(200).send(results);
     } catch (error) {
         console.error(`Hiba /admin/lista/${csid} lekérdezésénél:`, error.message);
@@ -279,7 +285,7 @@ app.get("/admin/jelentkezok/:jid", authenticateToken, function (req, res) {
     const q = "SELECT * FROM jelentkezok WHERE jid=?";
     try {
         const stmt = db.prepare(q);
-        const result = stmt.get(jid);
+        const result = stmt.get(Number(jid));
         if (result) {
             res.status(200).send(result);
         } else {
@@ -296,7 +302,7 @@ app.put("/admin/jelentkezok/:jid", authenticateToken, function (req, res) {
     const { jid } = req.params;
     const { csid, jnev, szulnev, szulido, szulhely, anyjaneve, cim, telefon, email } = req.body;
     // Kötelező mezők ellenőrzése
-    if (csid === undefined || !jnev || !szulido || !szulhely || !anyjaneve || !cim || !telefon || !email) {
+    if (!csid || !jnev || !szulido || !szulhely || !anyjaneve || !cim || !telefon || !email) {
         return res.status(400).send({ message: "Hiányzó kötelező mezők (csid, jnev, szulido, szulhely, anyjaneve, cim, telefon, email)." });
     }
     const q = "UPDATE jelentkezok "
@@ -307,20 +313,20 @@ app.put("/admin/jelentkezok/:jid", authenticateToken, function (req, res) {
         // Ellenőrizzük, hogy a csoport létezik-e, ha a csid megváltozik vagy meg van adva
         if (csid !== undefined) {
             const groupExistsStmt = db.prepare("SELECT kid FROM csoportok WHERE csid = ?");
-            if (!groupExistsStmt.get(csid)) {
+            if (!groupExistsStmt.get(Number(csid))) {
                 return res.status(400).send({ message: "A megadott csoport (csid) nem létezik." });
             }
         }
         const stmt = db.prepare(q);
         const info = stmt.run(
-            csid, jnev, szulnev, szulido, szulhely, anyjaneve, cim, telefon, email, jid
+            Number(csid), jnev, szulnev, szulido, szulhely, anyjaneve, cim, telefon, email, Number(jid)
         );
         if (info.changes > 0) {
             res.status(200).send({ message: "Jelentkező sikeresen módosítva.", changes: info.changes });
         } else {
             // Lehet, hogy a jelentkező nem létezik, vagy az adatok ugyanazok maradtak
             const checkStmt = db.prepare("SELECT 1 FROM jelentkezok WHERE jid = ?");
-            if (!checkStmt.get(jid)) {
+            if (!checkStmt.get(Number(jid))) {
                 return res.status(404).send({ message: "Jelentkező nem található." });
             }
             res.status(200).send({ message: "Jelentkező adatai nem változtak.", changes: info.changes });
@@ -340,7 +346,7 @@ app.delete("/admin/jelentkezok/:jid", authenticateToken, function (req, res) {
     const q = "DELETE FROM jelentkezok WHERE jid=?";
     try {
         const stmt = db.prepare(q);
-        const info = stmt.run(jid);
+        const info = stmt.run(Number(jid));
 
         if (info.changes > 0) {
             res.status(200).send({ message: "Jelentkező sikeresen törölve.", changes: info.changes });

@@ -111,6 +111,25 @@ Content-Type: application/json
     "ar": 400000
 }
 
+### 3.4 POST /admin/csoportok - Új csoport hozzáadása - Hiba: Negatív ár
+# @name postAdminUjCsoportNegativAr
+# Elvárt eredmény:
+# Status: 400 Bad Request
+# Body: JSON objektum
+#       { "message": "Az ár nem lehet negatív." }
+POST {{baseUrl}}/admin/csoportok
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+{
+    "kid": 1,
+    "indulas": "2026-01-01",
+    "beosztas": "hétfő-szerda 10-12",
+    "helyszin": "online",
+    "ar": -1000
+}
+
+
 ### 4.1 GET /admin/csoportok/:csid - Egy csoport adatainak lekérése - Létező
 # A tesztadatokból csid=1
 # @name getAdminEgyCsoportLetezo
@@ -200,6 +219,25 @@ Content-Type: application/json
     "helyszin": "online",
     "ar": 360000
 }
+
+### 5.5 PUT /admin/csoportok/:csid - Csoport módosítása - Hiba: Negatív ár
+# @name putAdminCsoportModositasNegativAr
+# Elvárt eredmény:
+# Status: 400 Bad Request
+# Body: JSON objektum
+#       { "message": "Az ár nem lehet negatív." }
+PUT {{baseUrl}}/admin/csoportok/{{ujCsoportId}}
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+{
+    "kid": 1, 
+    "indulas": "2025-10-15",
+    "beosztas": "kedd-csütörtök 18-21",
+    "helyszin": "online",
+    "ar": -50000
+}
+
 
 ### 6.1 GET /admin/lista/:csid - Egy csoport jelentkezőinek listája - Létező csoport, vannak jelentkezők
 # csid=1 (tesztadatokból)
