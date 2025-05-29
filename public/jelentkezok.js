@@ -8,7 +8,6 @@ jelentkezok()
 async function jelentkezok() {
     const url = 'http://localhost:5000/admin/lista/' + csid;
     const tabla = document.getElementById("jelentkezok");
-    const uzenetElem = document.getElementById("uzenet"); // For potential error messages
     try {
         const response = await fetch(url, {
             method: 'GET',
@@ -72,7 +71,7 @@ document.getElementById("hozzaad").onclick = async function (e) {
         });
         const data = await response.json();
         if (!response.ok) {
-            throw new Error(response.status + ' ' + response.message);
+            throw new Error(response.status + ' ' + data.message);
         }
         document.querySelector("form").reset();
         jelentkezok();
@@ -103,12 +102,6 @@ async function torol(jid) {
     }
 }
 
-document.getElementById("kijelentkezes").onclick = function () {
-    delete sessionStorage.token
-    document.location.href = "index.html"
-}
-
 document.getElementById("vissza").onclick = function () {
     document.location.href = "csoportok.html"
 }
-

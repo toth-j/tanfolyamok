@@ -1,0 +1,7 @@
+pipa vizsgálat index.html
+  vizsgálatot külön venni!!!
+jelentkező elindult csoportba -teszt
+
+frontend kiegészítés teszttel
+specifikáció
+readme

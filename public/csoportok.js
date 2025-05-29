@@ -116,8 +116,3 @@ async function torol(csid) {
         alert(err.message);
     }
 }
-
-document.getElementById("kijelentkezes").onclick = function () {
-    delete sessionStorage.token
-    document.location.href = "index.html"
-}

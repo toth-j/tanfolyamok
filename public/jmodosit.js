@@ -65,11 +65,6 @@ document.getElementById("modosit").onclick = async function (e) {
     }
 };
 
-document.getElementById("kijelentkezes").onclick = function () {
-    delete sessionStorage.token
-    document.location.href = "index.html"
-}
-
 document.getElementById("vissza").onclick = function () {
     document.location.href = "jelentkezok.html"
 }

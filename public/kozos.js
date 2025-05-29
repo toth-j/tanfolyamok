@@ -29,6 +29,10 @@ function ellenoriz() {
     let telefon = document.getElementById("telefon").value.trim();
     if (telefon.length < 8 || telefon.length > 15)
         return "Hibás telefonszám! (8-15 karakter lehet)"
-    // pipa
     return "";
+}
+
+document.getElementById("kijelentkezes").onclick = function () {
+    delete sessionStorage.token
+    document.location.href = "index.html"
 }
