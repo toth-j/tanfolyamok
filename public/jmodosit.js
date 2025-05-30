@@ -3,7 +3,7 @@ document.getElementById("jid").innerHTML = jid
 const token = 'Bearer ' + sessionStorage.token
 betolt()
 
-async function betolt() { // Függvény async-ként jelölve
+async function betolt() {
     const url = 'http://localhost:5000/admin/jelentkezok/' + jid;
     try {
         const response = await fetch(url, {
@@ -67,4 +67,9 @@ document.getElementById("modosit").onclick = async function (e) {
 
 document.getElementById("vissza").onclick = function () {
     document.location.href = "jelentkezok.html"
+}
+
+document.getElementById("kijelentkezes").onclick = function () {
+    delete sessionStorage.token
+    document.location.href = "index.html"
 }

@@ -44,11 +44,6 @@ async function jelentkezok() {
 
 document.getElementById("hozzaad").onclick = async function (e) {
     e.preventDefault()
-    let valasz = ellenoriz();
-    if (valasz) {
-        alert(valasz);
-        return;
-    }
     const url = 'http://localhost:5000/public/jelentkezok';
     const payload = {
         "csid": Number(csid),
@@ -104,4 +99,9 @@ async function torol(jid) {
 
 document.getElementById("vissza").onclick = function () {
     document.location.href = "csoportok.html"
+}
+
+document.getElementById("kijelentkezes").onclick = function () {
+    delete sessionStorage.token
+    document.location.href = "index.html"
 }

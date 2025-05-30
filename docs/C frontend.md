@@ -21,7 +21,7 @@ A frontend kommunikál egy backend API-val (alapértelmezetten `http://localhos
 
 1. **`public/index.html`**
    
-   * **Kapcsolódó JavaScript:** `public/index.js`, `public/kozos.js`
+   * **Kapcsolódó JavaScript:** `public/index.js`
    * **Célja:** Az alkalmazás főoldala, amely publikusan elérhető. Itt tekinthetők meg a meghirdetett képzések leírásai, az induló csoportok listája, valamint innen lehet jelentkezni a csoportokra. Ennek az oldalnak az alján található az adminisztrátori bejelentkezési felület is.
    * **Fontosabb elemek és funkciók:**
      * **Fejléc (`<header>`):** Megjeleníti az iskola nevét és a képzések típusát.
@@ -38,7 +38,7 @@ A frontend kommunikál egy backend API-val (alapértelmezetten `http://localhos
        * Jelszó beviteli mező (`#password`).
        * "Bejelentkezés" gomb (`#login`), amely az `index.js`-ben kezeli a bejelentkezési kísérletet.
        * Egy bekezdés (`<p id="uzenet2">`) a bejelentkezési eredmény (hibaüzenet) megjelenítésére.
-   * **Interakciók:** Az `index.js` kezeli a csoportok listázását, a jelentkezési űrlap validálását (a `kozos.js` `ellenoriz` függvényével) és beküldését, valamint az adminisztrátori bejelentkezést.
+   * **Interakciók:** Az `index.js` kezeli a csoportok listázását, a jelentkezési űrlap validálását (az `ellenoriz` függvényével) és beküldését, valamint az adminisztrátori bejelentkezést.
 
 2. **`public/csoportok.html`**
    
@@ -60,7 +60,7 @@ A frontend kommunikál egy backend API-val (alapértelmezetten `http://localhos
 
 3. **`public/jelentkezok.html`**
    
-   * **Kapcsolódó JavaScript:** `public/jelentkezok.js`, `public/kozos.js`
+   * **Kapcsolódó JavaScript:** `public/jelentkezok.js`
    * **Célja:** Adminisztrációs felület, ahol egy kiválasztott csoporthoz tartozó jelentkezők listája jelenik meg. Lehetőség van új jelentkezőt manuálisan hozzáadni a csoporthoz, valamint a meglévő jelentkezők adatait módosítani vagy törölni őket.
    * **Fontosabb elemek és funkciók:**
      * **Kijelentkezés gomb (`#kijelentkezes`):** Adminisztrátori kijelentkezés.
@@ -68,7 +68,7 @@ A frontend kommunikál egy backend API-val (alapértelmezetten `http://localhos
      * **Csoport azonosító kijelzése :** A `jelentkezok.js` dinamikusan írja bele a `sessionStorage`-ből olvasott csoportazonosítót.
      * **Új jelentkező hozzáadása űrlap (`<form>`):**
        * Hasonló a publikus `index.html` jelentkezési űrlapjához, input mezőkkel a jelentkező adatainak megadására.
-       * "Hozzáadás" gomb (`#hozzaad`), amely a `jelentkezok.js` segítségével validálja (a `kozos.js` `ellenoriz` függvényével) és elküldi az új jelentkező adatait.
+       * "Hozzáadás" gomb (`#hozzaad`), amely a `jelentkezok.js` segítségével elküldi az új jelentkező adatait.
      * **Létszám kijelzése (`<p id="letszam"></p>`):** A `jelentkezok.js` dinamikusan frissíti a csoport aktuális létszámával.
      * **Jelentkezők táblázata (`<table id="jelentkezok">`):**
        * Dinamikusan töltődik fel a `jelentkezok.js` által az `/admin/lista/{csid}` API végpontról lekért adatokkal.
@@ -115,13 +115,13 @@ A frontend JavaScript logikája több fájlra van bontva, mindegyik egy adott ol
    
    * **Célja:** A publikus főoldal logikáját tartalmazza, ahol a felhasználók megtekinthetik a meghirdetett csoportokat és jelentkezhetnek rájuk, valamint az adminisztrátorok bejelentkezhetnek.
    * **Globális változók:**
-     * `max = 8`: Meghatározza egy csoport maximális létszámát (ez a változó a `kozos.js` `ellenoriz` függvényében is használatos, de ott nincs deklarálva, ami potenciális hibaforrás lehet, ha a `kozos.js` önmagában kerülne felhasználásra vagy más kontextusban).
+     * `max = 8`: Meghatározza egy csoport maximális létszámát.
      * `adatok`: Tárolja a lekérdezett csoportok adatait.
    * **Függvények:**
      * `csoportok()`: Aszinkron függvény, amely lekéri a publikus csoportok listáját a `/public/csoportok` végpontról. A válasz alapján dinamikusan felépíti a csoportokat megjelenítő HTML táblázatot. Hiba esetén hibaüzenetet jelenít meg a táblázatban.
    * **Eseménykezelők:**
      * `document.getElementById("jelentkezemGomb").onclick`:
-       * Meghívja az `ellenoriz()` függvényt (a `kozos.js`-ből) a jelentkezési űrlap validálására.
+       * Meghívja az `ellenoriz()` függvényt a jelentkezési űrlap validálására.
        * Ha a validáció sikeres, összegyűjti az űrlap adatait és POST kérést küld a `/public/jelentkezok` végpontra a jelentkezés rögzítésére.
        * Sikeres jelentkezés után üzenetet jelenít meg, letiltja a gombot, és frissíti a csoportok listáját.
        * Hiba esetén hibaüzenetet jelenít meg.
@@ -178,8 +178,7 @@ A frontend JavaScript logikája több fájlra van bontva, mindegyik egy adott ol
    * **Eseménykezelők:**
      * `document.getElementById("hozzaad").onclick`:
        * Megakadályozza az űrlap alapértelmezett küldését (`e.preventDefault()`).
-       * Meghívja az `ellenoriz()` függvényt (a `kozos.js`-ből) a validáláshoz.
-       * Ha a validáció sikeres, összegyűjti az új jelentkező adatait a formról.
+       * Összegyűjti az új jelentkező adatait a formról.
        * POST kérést küld a `/public/jelentkezok` végpontra az új jelentkező hozzáadásához (figyelem: ez a publikus végpont, de admin oldali hozzáadásnál is ezt használja, ami biztonsági megfontolásokat vethet fel, ha nincs szerveroldali jogosultságkezelés a kontextus alapján).
        * Sikeres hozzáadás után üríti a formot és frissíti a jelentkezők listáját.
        * Hiba esetén hibaüzenetet logol és `alert`-ben is megjeleníti.
@@ -225,29 +224,6 @@ A frontend JavaScript logikája több fájlra van bontva, mindegyik egy adott ol
      * `document.getElementById("kijelentkezes").onclick`: Törli a tokent és átirányít az `index.html`-re.
      * `document.getElementById("vissza").onclick`: Átirányít a `jelentkezok.html` oldalra.
 
-6. **`public/kozos.js`**
-   
-   * **Célja:** Közös, több oldalon is használt függvényeket tartalmaz, jelenleg a jelentkezési űrlap validálását.
-   
-   * **Függvények:**
-     
-     * `ellenoriz()`:
-       * Ez a függvény a jelentkezési űrlap mezőinek validálását végzi.
-       * Ellenőrzi, hogy a csoport betelt-e (a globális `letszam` és `max` változók alapján, melyeknek a hívó kontextusban definiáltnak kell lenniük).
-       * Ellenőrzi a név, születési idő (korhatár: 18-65 év), születési hely, anyja neve, cím, telefonszám hosszát és/vagy formátumát.
-       * Hiba esetén a hibát leíró stringet ad vissza, egyébként üres stringet.
-   
-   * **Megjegyzés:** A függvény a `letszam` és `max` globális változókra támaszkodik, amelyeket a hívó szkriptnek (`index.js`, `jelentkezok.js`) kell biztosítania. 
-   
-   * **Eseménykezelők:**
-     
-     * `document.getElementById("kijelentkezes").onclick`:
-       * Ez az eseménykezelő a `#kijelentkezes` ID-val rendelkező HTML elemre kattintva aktiválódik. Ez a gomb az adminisztrációs oldalakon (`csoportok.html`, `jelentkezok.html`, `modosit.html`, `jmodosit.html`) található meg, lehetővé téve az adminisztrátor számára a kijelentkezést.
-       * **Működése:**
-         1. Törli az authentikációs tokent a `sessionStorage`-ből (`delete sessionStorage.token`). Ezzel érvényteleníti az aktuális adminisztrátori munkamenetet.
-         2. Átirányítja a felhasználót az alkalmazás főoldalára, az `index.html`-re (`document.location.href = "index.html"`).
-       * **Megjegyzés:** Mivel ez a szkriptrészlet a `kozos.js`-ben található, és ez a fájl több HTML oldalba is be van ágyazva, ez a kijelentkezési funkcionalitás egységesen működik minden olyan oldalon, ahol a `kozos.js` betöltődik és létezik egy `#kijelentkezes` ID-jú elem. Ez biztosítja, hogy a kijelentkezés logikáját nem kell minden admin oldalon külön implementálni.
-
 ## Frontend futtatása
 
 A frontend fájlokat a Node.js/Express backend szolgálja ki statikus fájlokként a `public` mappából. Tehát a frontend futtatásához a backend szervert kell elindítani (`npm start` vagy `node server.js`), majd a böngészőben megnyitni a `http://localhost:5000` címet.
@@ -256,9 +232,10 @@ A frontend fájlokat a Node.js/Express backend szolgálja ki statikus fájlokké
 
 A frontend alkalmazás funkcionalitásának és felhasználói élményének ellenőrzése érdekében manuális tesztelési esetek kerültek kidolgozásra. Ezek a tesztek lefedik a főbb felhasználói utakat, a felhasználói felület elemeinek helyes működését, valamint a reszponzivitást különböző eszközökön.
 
-A részletes manuális tesztelési esetek és a tesztelési folyamat leírása a következő dokumentumban található:
+A részletes manuális tesztelési esetek és a tesztelési folyamat leírása a következő dokumentumokban található:
 
-* `tests/manual_e2e_tests.md`
+* `tests/public_e2e.md`
+* `tests/admin_e2e.md`
 
 **Megjegyzések**:
 
@@ -267,5 +244,3 @@ A részletes manuális tesztelési esetek és a tesztelési folyamat leírása a
 * Ha az adatbázis már tartalmaz megőrzendő adatokat, akkor az adatbázisfájlt a tesztek futtatása előtt célszerű átnevezni.
 
 A tesztek futtatását a `tests/test_execution_log.xlsx` fájlban dokumentáljuk.
-
-

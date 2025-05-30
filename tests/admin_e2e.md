@@ -554,6 +554,49 @@ Adminisztrációs funkciók tesztesetei
 
 * * *
 
+**Teszt ID:** ADM_TC_018A
+
+**Teszt megnevezése:** Jelentkezők - Új jelentkező hozzáadása - Csoport már elindult
+
+**Előfeltételek:**
+
+1. Sikeres admin bejelentkezés.
+2. A felhasználó a `jelentkezok.html` oldalon van.
+3. A `sessionStorage.csid` egy olyan csoportra van állítva, amelynek az indulási dátuma már a múltban van (pl. `csid=1` a `tesztadatok.sql`-ből, indulás: `2024-09-02`, feltételezve, hogy a teszt futtatásakor ez a dátum már elmúlt).
+4. A csoportnak van még szabad helye (pl. `csid=1` esetén 2/8 fő).
+
+**Lépések:**
+
+1. Töltse ki az "Új jelentkező felvétele" űrlap mezőit érvényes adatokkal.
+2. Kattintson a "Hozzáad" gombra.
+
+**Tesztadatok:**
+
+* Csoport ID (`sessionStorage.csid`): `1` (vagy más, már elindult, de nem telt csoport)
+* Jelentkező adatai:
+  * Név: Későn Érkező
+  * Születési név: Későn Érkező
+  * Születési idő: 1995-01-01
+  * Születési hely: Halasztó
+  * Anyja neve: Váró Vera
+  * Lakcím: 6789 Későfalva, Utolsó utca 1.
+  * Telefonszám: +36309998877
+  * Email: keso@example.com
+
+**Elvárt eredmény:**
+
+1. Egy felugró ablak (alert) jelenik meg a "Ebbe a csoportba nem lehet jelentkezni." hibaüzenettel.
+2. Az űrlap mezői nem ürülnek ki.
+3. Az új jelentkező nem kerül hozzáadásra a listához.
+4. A létszám nem változik.
+
+* * *
+
+**Teszt ID:** ADM_TC_019
+
+**Teszt megnevezése:** Jelentkezők - Jelentkező módosítása - Navigáció a módosító oldalra
+* * *
+
 **Teszt ID:** ADM_TC_019
 
 **Teszt megnevezése:** Jelentkezők - Jelentkező módosítása - Navigáció a módosító oldalra
@@ -691,6 +734,44 @@ Adminisztrációs funkciók tesztesetei
 
 * * *
 
+**Teszt ID:** ADM_TC_018A
+
+**Teszt megnevezése:** Jelentkezők - Új jelentkező hozzáadása - Csoport már elindult
+
+**Előfeltételek:**
+
+1. Sikeres admin bejelentkezés.
+2. A felhasználó a `jelentkezok.html` oldalon van.
+3. A `sessionStorage.csid` egy olyan csoportra van állítva, amelynek az indulási dátuma már a múltban van (pl. `csid=1` a `tesztadatok.sql`-ből, indulás: `2024-09-02`, feltételezve, hogy a teszt futtatásakor ez a dátum már elmúlt).
+4. A csoportnak van még szabad helye (pl. `csid=1` esetén 2/8 fő).
+
+**Lépések:**
+
+1. Töltse ki az "Új jelentkező felvétele" űrlap mezőit érvényes adatokkal.
+2. Kattintson a "Hozzáad" gombra.
+
+**Tesztadatok:**
+
+* Csoport ID (`sessionStorage.csid`): `1` (vagy más, már elindult, de nem telt csoport)
+* Jelentkező adatai:
+  * Név: Későn Érkező
+  * Születési név: Későn Érkező
+  * Születési idő: 1995-01-01
+  * Születési hely: Halasztó
+  * Anyja neve: Váró Vera
+  * Lakcím: 6789 Későfalva, Utolsó utca 1.
+  * Telefonszám: +36309998877
+  * Email: keso@example.com
+
+**Elvárt eredmény:**
+
+1. Egy felugró ablak (alert) jelenik meg a "A csoport már elindult, nem lehet új jelentkezőt hozzáadni!" (vagy hasonló, az API válasza alapján) hibaüzenettel.
+2. Az űrlap mezői nem ürülnek ki.
+3. Az új jelentkező nem kerül hozzáadásra a listához.
+4. A létszám nem változik.
+
+* * *
+
 **Teszt ID:** ADM_TC_024
 
 **Teszt megnevezése:** Jelentkezők - Jelentkező törlése - Törlés megszakítása
@@ -792,5 +873,3 @@ Adminisztrációs funkciók tesztesetei
 
 1. A `sessionStorage.token` törlődik.
 2. A felhasználó átirányításra kerül az `index.html` oldalra.
-
-

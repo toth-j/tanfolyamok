@@ -73,3 +73,8 @@ document.getElementById("kijelentkezes").onclick = function () {
 document.getElementById("vissza").onclick = function () {
     document.location.href = "csoportok.html"
 }
+
+document.getElementById("kijelentkezes").onclick = function () {
+    delete sessionStorage.token
+    document.location.href = "index.html"
+}

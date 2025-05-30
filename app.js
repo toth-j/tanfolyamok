@@ -2,21 +2,20 @@ require('dotenv').config();
 const express = require("express");
 const app = express();
 app.use(express.json());
-const path = require("path");
 const cors = require("cors");
 app.use(cors());
 const bcrypt = require('bcrypt');
 const jwt = require("jsonwebtoken");
 const Database = require('better-sqlite3');
-
+const path = require("path");
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Adatbázis kapcsolat inicializálása
-const db = new Database('tanfolyamok.db', { verbose: console.log });
+const db = new Database('tanfolyamok.db', { /*verbose: console.log*/ });
 db.pragma('journal_mode = WAL'); // Ajánlott a jobb teljesítményért és konkurrenciakezelésért
 db.pragma('foreign_keys = ON'); // Idegen kulcsok engedélyezése
 
-// Adatbázis séma inicializálása (táblák létrehozása)
+// Adatbázis séma inicializálása (táblák és indexek létrehozása)
 const createTables = `
     CREATE TABLE IF NOT EXISTS kepzesek (
       kid INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -62,17 +61,17 @@ try {
 
 // *** publikus API *** //
 
-// visszaadja az ezután induló csoportok adatait
+// visszaadja az ezután induló csoportok adatait létszámmal együtt
 app.get("/public/csoportok", function (req, res) {
     const q = "SELECT csoportok.csid, kepzesek.knev, indulas, beosztas, ar, "
         + "COUNT(jelentkezok.jid) AS letszam "
         + "FROM kepzesek JOIN csoportok ON csoportok.kid=kepzesek.kid "
         + "LEFT JOIN jelentkezok ON csoportok.csid = jelentkezok.csid "
-        + "WHERE indulas >= date('now') GROUP BY csoportok.csid"; 
+        + "WHERE indulas >= date('now') GROUP BY csoportok.csid";
     try {
         const stmt = db.prepare(q);
         const results = stmt.all();
-        res.send(results);
+        res.status(200).send(results);
     } catch (error) {
         console.error("Hiba /public/csoportok lekérdezésénél:", error.message);
         res.status(500).send({ message: "Adatbázis hiba történt." });
@@ -85,8 +84,8 @@ app.post("/public/jelentkezok", function (req, res) {
         + "szulhely, anyjaneve, cim, telefon, email) "
         + "VALUES (?,?,?,?,?,?,?,?,?)";
     const { csid, jnev, szulnev, szulido, szulhely, anyjaneve, cim, telefon, email } = req.body;
-    if (!csid || !jnev || !email) {
-        return res.status(400).send({ message: "Hiányzó kötelező mezők (csid, jnev, email)." });
+    if (!csid || !jnev || !szulido || !szulhely || !anyjaneve || !cim || !telefon || !email) {
+        return res.status(400).send({ message: "Hiányzó kötelező mezők." });
     }
     try {
         // Ellenőrizzük, hogy a csoport létezik-e és ezután indul-e
@@ -97,7 +96,7 @@ app.post("/public/jelentkezok", function (req, res) {
         // Ellenőrizzük, hogy ezzel az e-mail címmel jelentkezett-e már erre a csoportra
         const duplicateCheckStmt = db.prepare("SELECT jid FROM jelentkezok WHERE csid = ? AND email = ?");
         if (duplicateCheckStmt.get(csid, email)) {
-            return res.status(409).send({ message: "Ezzel az e-mail címmel már jelentkeztek erre a csoportra." });
+            return res.status(409).send({ message: "Ezzel az e-mail címmel már jelentkeztek ebbe a csoportba." });
         }
         // Ellenőrizzük a maximális létszámot (8 fő)
         const countQuery = "SELECT COUNT(jid) AS letszam FROM jelentkezok WHERE csid = ?";
@@ -114,7 +113,7 @@ app.post("/public/jelentkezok", function (req, res) {
     } catch (error) {
         console.error("Hiba /public/jelentkezok létrehozásánál:", error.message);
         if (error.code === 'SQLITE_CONSTRAINT_FOREIGNKEY') {
-             return res.status(400).send({ message: "Érvénytelen csoport azonosító (csid)." });
+            return res.status(400).send({ message: "Érvénytelen csoport azonosító (csid)." });
         }
         res.status(500).send({ message: "Adatbázis hiba történt a jelentkezés rögzítésekor." });
     }
@@ -128,8 +127,8 @@ app.post("/admin", function (req, res) {
     if (!bcrypt.compareSync(req.body.password, hash))
         return res.status(401).send({ message: "Hibás jelszó!" })
     const token = jwt.sign(
-        { password: req.body.password }, 
-        process.env.TOKEN_SECRET, 
+        { password: req.body.password },
+        process.env.TOKEN_SECRET,
         { expiresIn: 3600 })
     res.status(200).send({ token: token, message: "Sikeres bejelentkezés." })
 });
@@ -151,10 +150,10 @@ function authenticateToken(req, res, next) {
 // az összes csoport adatainak lekérése
 app.get("/admin/csoportok", authenticateToken, function (req, res) {
     const q = "SELECT csoportok.csid, kepzesek.knev, indulas, beosztas, helyszin, ar, "
-        + "COUNT(jelentkezok.jid) AS letszam " 
+        + "COUNT(jelentkezok.jid) AS letszam "
         + "FROM kepzesek JOIN csoportok ON csoportok.kid=kepzesek.kid "
         + "LEFT JOIN jelentkezok ON csoportok.csid = jelentkezok.csid "
-        + "GROUP BY csoportok.csid ORDER BY indulas DESC"; 
+        + "GROUP BY csoportok.csid ORDER BY indulas DESC";
     try {
         const stmt = db.prepare(q);
         const results = stmt.all();
@@ -175,7 +174,7 @@ app.post("/admin/csoportok", authenticateToken, function (req, res) {
         return res.status(400).send({ message: "Az ár nem lehet negatív." });
     }
     const q = "INSERT INTO csoportok (kid, indulas, beosztas, helyszin, ar) "
-            + "VALUES(?,?,?,?,?)"
+        + "VALUES(?,?,?,?,?)"
     try {
         const stmt = db.prepare(q);
         const info = stmt.run(Number(kid), indulas, beosztas, helyszin, Number(ar));
@@ -183,7 +182,7 @@ app.post("/admin/csoportok", authenticateToken, function (req, res) {
     } catch (error) {
         console.error("Hiba /admin/csoportok létrehozásánál:", error.message);
         if (error.code === 'SQLITE_CONSTRAINT_FOREIGNKEY') {
-             return res.status(400).send({ message: "Érvénytelen képzés azonosító (kid)." });
+            return res.status(400).send({ message: "Érvénytelen képzés azonosító (kid)." });
         }
         res.status(500).send({ message: "Adatbázis hiba történt a csoport létrehozásakor." });
     }
@@ -193,7 +192,7 @@ app.post("/admin/csoportok", authenticateToken, function (req, res) {
 app.get("/admin/csoportok/:csid", authenticateToken, function (req, res) {
     const { csid } = req.params;
     const q = "SELECT kid, indulas, beosztas, helyszin, ar "
-            + "FROM csoportok WHERE csid=?";
+        + "FROM csoportok WHERE csid=?";
     try {
         const stmt = db.prepare(q);
         const result = stmt.get(Number(csid));
@@ -219,8 +218,8 @@ app.put("/admin/csoportok/:csid", authenticateToken, function (req, res) {
         return res.status(400).send({ message: "Az ár nem lehet negatív." });
     }
     const q = "UPDATE csoportok "
-            + "SET kid=?, indulas=?, beosztas=?, helyszin=?, ar=? "
-            + "WHERE csid=?"
+        + "SET kid=?, indulas=?, beosztas=?, helyszin=?, ar=? "
+        + "WHERE csid=?"
     try {
         const stmt = db.prepare(q);
         const info = stmt.run(Number(kid), indulas, beosztas, helyszin, Number(ar), Number(csid));
@@ -232,7 +231,7 @@ app.put("/admin/csoportok/:csid", authenticateToken, function (req, res) {
     } catch (error) {
         console.error(`Hiba /admin/csoportok/${csid} módosításánál:`, error.message);
         if (error.code === 'SQLITE_CONSTRAINT_FOREIGNKEY') {
-             return res.status(400).send({ message: "Érvénytelen képzés azonosító (kid)." });
+            return res.status(400).send({ message: "Érvénytelen képzés azonosító (kid)." });
         }
         res.status(500).send({ message: "Adatbázis hiba történt a csoport módosításakor." });
     }
@@ -253,7 +252,7 @@ app.delete("/admin/csoportok/:csid", authenticateToken, function (req, res) {
     } catch (error) {
         console.error(`Hiba /admin/csoportok/${csid} törlésénél:`, error.message);
         if (error.code === 'SQLITE_CONSTRAINT_FOREIGNKEY' || error.message.toUpperCase().includes("FOREIGN KEY CONSTRAINT FAILED")) {
-             return res.status(400).send({ message: "A csoport nem törölhető, mert vannak hozzá rendelt jelentkezők." });
+            return res.status(400).send({ message: "A csoport nem törölhető, mert vannak hozzá rendelt jelentkezők." });
         }
         res.status(500).send({ message: "Adatbázis hiba történt a csoport törlésekor." });
     }
@@ -262,8 +261,8 @@ app.delete("/admin/csoportok/:csid", authenticateToken, function (req, res) {
 // egy csoport jelentkezőinek listája
 app.get("/admin/lista/:csid", authenticateToken, function (req, res) {
     const { csid } = req.params;
-    const q = "SELECT jid, jnev, szulnev, szulido, szulhely, anyjaneve, " 
-            + "cim, telefon, email FROM jelentkezok WHERE csid=? ORDER BY jnev";
+    const q = "SELECT jid, jnev, szulnev, szulido, szulhely, anyjaneve, "
+        + "cim, telefon, email FROM jelentkezok WHERE csid=? ORDER BY jnev";
     try {
         const groupExistsStmt = db.prepare("SELECT 1 FROM csoportok WHERE csid = ?");
         const group = groupExistsStmt.get(Number(csid));
@@ -306,16 +305,14 @@ app.put("/admin/jelentkezok/:jid", authenticateToken, function (req, res) {
         return res.status(400).send({ message: "Hiányzó kötelező mezők (csid, jnev, szulido, szulhely, anyjaneve, cim, telefon, email)." });
     }
     const q = "UPDATE jelentkezok "
-            + "SET csid=?, jnev=?, szulnev=?, szulido=?, "
-            + "szulhely=?, anyjaneve=?, cim=?, telefon=?, email=? "
-            + "WHERE jid=?";
+        + "SET csid=?, jnev=?, szulnev=?, szulido=?, "
+        + "szulhely=?, anyjaneve=?, cim=?, telefon=?, email=? "
+        + "WHERE jid=?";
     try {
-        // Ellenőrizzük, hogy a csoport létezik-e, ha a csid megváltozik vagy meg van adva
-        if (csid !== undefined) {
-            const groupExistsStmt = db.prepare("SELECT kid FROM csoportok WHERE csid = ?");
-            if (!groupExistsStmt.get(Number(csid))) {
-                return res.status(400).send({ message: "A megadott csoport (csid) nem létezik." });
-            }
+        // Ellenőrizzük, hogy a csoport létezik-e (A maximális létszám túllépését nem vizsgáljuk.)
+        const groupExistsStmt = db.prepare("SELECT kid FROM csoportok WHERE csid = ?");
+        if (!groupExistsStmt.get(Number(csid))) {
+            return res.status(400).send({ message: "A megadott csoport (csid) nem létezik." });
         }
         const stmt = db.prepare(q);
         const info = stmt.run(
@@ -334,7 +331,7 @@ app.put("/admin/jelentkezok/:jid", authenticateToken, function (req, res) {
     } catch (error) {
         console.error(`Hiba /admin/jelentkezok/${jid} módosításánál:`, error.message);
         if (error.code === 'SQLITE_CONSTRAINT_FOREIGNKEY') {
-             return res.status(400).send({ message: "Érvénytelen csoport azonosító (csid)." });
+            return res.status(400).send({ message: "Érvénytelen csoport azonosító (csid)." });
         }
         res.status(500).send({ message: "Adatbázis hiba történt a jelentkező módosításakor." });
     }

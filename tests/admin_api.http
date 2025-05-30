@@ -18,7 +18,6 @@ Content-Type: application/json
     "password": "{{adminPassword}}"
 }
 
-
 ### A sikeres bejelentkezés után kapott token eltárolása
 @authToken = {{adminLogin.response.body.token}}
 

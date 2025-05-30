@@ -16,13 +16,16 @@
 GET {{baseUrl}}/public/csoportok
 Content-Type: application/json
 
-### 2. POST /public/jelentkezok - Sikeres jelentkezés
+### 2. POST /public/jelentkezok - Sikeres jelentkezés, majd sikertelen jelentkezés
 # Jelentkezés a csid=4 csoportba (van még 2 hely)
 # @name postPublicJelentkezoSikeres
-# Elvárt eredmény:
+# Első futtatásnál elvárt eredmény:
 # Status: 201 Created
 # Body: JSON objektum
 #       { "message": "Sikeres jelentkezés!", "id": <az_uj_jelentkezo_id-ja>, "changes": 1 }
+# Második futtatásnál elvárt eredmény:
+# Status: 409 Conflict
+# Body: JSON objektum { "message": "Ezzel az e-mail címmel már jelentkeztek ebbe a csoportba." }
 
 POST {{baseUrl}}/public/jelentkezok
 Content-Type: application/json
@@ -105,11 +108,11 @@ Content-Type: application/json
 }
 
 ### 6. POST /public/jelentkezok - Hiba: Hiányzó kötelező mezők
-# Hiányzik: jnev, email (csid megadva)
+# Hiányzik: jnev, email
 # @name postPublicJelentkezoHianyzoMezok
 # Elvárt eredmény:
 # Status: 400 Bad Request
-# Body: JSON objektum { "message": "Hiányzó kötelező mezők (csid, jnev, email)." }
+# Body: JSON objektum { "message": "Hiányzó kötelező mezők." }
 POST {{baseUrl}}/public/jelentkezok
 Content-Type: application/json
 
@@ -122,45 +125,3 @@ Content-Type: application/json
     "cim": "1111 Budapest, Fő út 1.",
     "telefon": "+36209876543"
 }
-
-### 7.1 POST /public/jelentkezok - Hiba: Dupla jelentkezés ugyanabba a csoportba
-# Először egy sikeres jelentkezés.
-# @name postPublicJelentkezoDuplaElsoLepes
-# Elvárt eredmény (első lépés):
-# Status: 201 Created
-POST {{baseUrl}}/public/jelentkezok
-Content-Type: application/json
-
-{
-    "csid": 4,
-    "jnev": "Dupla Próba Béla",
-    "szulnev": "Dupla Próba Béla",
-    "szulido": "1995-05-05",
-    "szulhely": "Duplaváros",
-    "anyjaneve": "Dupla Anya",
-    "cim": "6789 Dupla körút 10.",
-    "telefon": "+36309876543",
-    "email": "dupla.proba.bela@example.com"
-}
-
-### 7.2 POST /public/jelentkezok - Hiba: Dupla jelentkezés ugyanabba a csoportba
-# Második kísérlet ugyanazzal az email címmel
-# @name postPublicJelentkezoDuplaMasodikLepes
-# Elvárt eredmény (második lépés):
-# Status: 409 Conflict
-# Body: JSON objektum { "message": "Ezzel az e-mail címmel már jelentkeztek erre a csoportra." }
-POST {{baseUrl}}/public/jelentkezok
-Content-Type: application/json
-
-{
-    "csid": 4,
-    "jnev": "Dupla Próba Béla Másodszor",
-    "szulnev": "Dupla Próba Béla",
-    "szulido": "1995-05-05",
-    "szulhely": "Duplaváros",
-    "anyjaneve": "Dupla Anya",
-    "cim": "6789 Dupla körút 10.",
-    "telefon": "+36309876543",
-    "email": "dupla.proba.bela@example.com"
-}
-

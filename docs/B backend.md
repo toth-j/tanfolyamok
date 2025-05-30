@@ -1,6 +1,6 @@
 # Tanfolyamok alkalmazás backend dokumentáció
 
-Ez a dokumentum a Tanfolyamkezelő Rendszer backend API-jának fejlesztői dokumentációját tartalmazza.
+Ez a dokumentum a Tanfolyamok alkalmazás backend API-jának fejlesztői dokumentációját tartalmazza.
 
 ## Tartalomjegyzék
 
@@ -38,7 +38,7 @@ Ez a dokumentum a Tanfolyamkezelő Rendszer backend API-jának fejlesztői dokum
 
 ## 1. Bevezetés
 
-A backend egy Node.js és Express.js alapú alkalmazás, amely SQLite adatbázist használ a tanfolyamok, csoportok és jelentkezők adatainak tárolására. Két fő API részre oszlik: egy publikus API a tanfolyamok böngészéséhez és a jelentkezéshez, valamint egy adminisztrációs API a rendszer kezeléséhez.
+A backend Node.js és Express.js alapon működik, és SQLite adatbázist használ a tanfolyamok, csoportok és jelentkezők adatainak tárolására. Az API két fő részre oszlik: egy publikus API a tanfolyamok böngészéséhez és a jelentkezéshez, valamint egy adminisztrációs API a rendszer kezeléséhez.
 
 ## 2. Telepítés és futtatás
 
@@ -67,7 +67,7 @@ A backend egy Node.js és Express.js alapú alkalmazás, amely SQLite adatbázis
    * `ADMIN`: Az adminisztrátori jelszó bcrypt hash-e. Generálhat egyet például a következő Node.js kóddal:
 
      ```javascript
-     // pl. generateHash.js
+     // generateHash.js
      const bcrypt = require('bcrypt');
      const saltRounds = 10;
      const plainPassword = 'TanfAdmin!2025'; // Cserélje le a kívánt jelszóra
@@ -80,7 +80,7 @@ A backend egy Node.js és Express.js alapú alkalmazás, amely SQLite adatbázis
      });
      ```
 
-       Futtatás: `node generateHash.js`
+      Futtatás: `node generateHash.js`
 
    * `TOKEN_SECRET`: Egyedi, titkos karaktersorozat a JWT tokenek aláírásához.
 
@@ -155,7 +155,7 @@ Példa: `Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...`
 
 A token érvényességi ideje 3600 másodperc (1 óra).
 
-## 5. API Végpontok
+## 5. API végpontok
 
 Alap URL: `http://localhost:5000`
 
@@ -209,18 +209,17 @@ Alap URL: `http://localhost:5000`
   }
   ```
   
-  * **Kötelező mezők a 400-as "Hiányzó kötelező mezők" hibához**: `csid`, `jnev`, `email`.
-  * **További, adatbázis szinten kötelező (NOT NULL) mezők**: `szulido`, `szulhely`, `anyjaneve`, `cim`, `telefon`. Ezek hiánya 500-as adatbázis hibát eredményez.
+  * **Kötelező mezők a 400-as "Hiányzó kötelező mezők" hibához**: minden mező a `szulnev` kivételével.
 
 * **Válasz**:
   
   * `201 Created`: `{ "message": "Sikeres jelentkezés!", "jid": <az_uj_jelentkezo_id-ja>, "changes": 1 }`
-  * `400 Bad Request`: `{ "message": "Hiányzó kötelező mezők (csid, jnev, email)." }`
+  * `400 Bad Request`: `{ "message": "Hiányzó kötelező mezők." }`
   * `404 Not Found`: `{ "message": "Ebbe a csoportba nem lehet jelentkezni." }` (Ha a csoport nem létezik, vagy már elindult.)
   * `400 Bad Request`: `{ "message": "Érvénytelen csoport azonosító (csid)." }` (Ha a megadott `csid` nem létezik a `csoportok` táblában, adatbázis FK hiba.)
   * `409 Conflict`: `{ "message": "Ezzel az e-mail címmel már jelentkeztek erre a csoportra." }`
   * `409 Conflict`: `{ "message": "A csoport megtelt, maximum 8 fő jelentkezhet." }`
-  * `500 Internal Server Error`: `{ "message": "Adatbázis hiba történt a jelentkezés rögzítésekor." }` (Pl. hiányzó, adatbázis szinten kötelező mezők - kivéve `csid` FK hiba, ami 400-as kódot ad - vagy egyéb DB hiba.)
+  * `500 Internal Server Error`: `{ "message": "Adatbázis hiba történt a jelentkezés rögzítésekor." }` 
 
 ### Admin API
 
@@ -442,7 +441,7 @@ Minden Admin API végpont JWT token authentikációt igényel (lásd: Authentik�
 
 #### PUT `/admin/jelentkezok/:jid`
 
-* **Leírás**: Egy meglévő jelentkező adatainak módosítása.
+* **Leírás**: Egy meglévő jelentkező adatainak módosítása. (CSoport módosításakor a maximális létszám túllépését nem vizsgálja.)
 
 * **Authentikáció**: JWT Token szükséges.
 
@@ -527,4 +526,4 @@ Minden teszteset a `.http` fájlokban a következőképpen van strukturálva:
 * A `###` szeparátor választja el az egyes kéréseket.
 * Az `admin_api.http` fájl változókat használ (`@baseUrl`, `@authToken`, `@ujCsoportId`) a kérések dinamikusabbá tételéhez és az értékek átadásához a tesztek között. Az `@authToken` például az admin bejelentkezési kérés válaszából kerül kinyerésre.
 
-A tesztek sorrendje fontos, különösen az `admin_api.http` fájlban, ahol egy későbbi teszt egy korábbi teszt által létrehozott erőforráson (pl. új csoport) végezhet műveleteket. Javasolt a teszteket a fájlban megadott sorrendben futtatni, különösen az első alkalommal vagy az adatbázis frissítése után.
+A tesztek sorrendje fontos, különösen az `admin_api.http` fájlban, ahol egy későbbi teszt egy korábbi teszt által létrehozott erőforráson (pl. új csoport) végezhet műveleteket. Javasolt a teszteket a fájlban megadott sorrendben futtatni.
