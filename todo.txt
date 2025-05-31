@@ -1,7 +1,0 @@
-specifikáció
-readme
-
-tesztek logolása!!!
-frontend elejére tartalomjegyzék!
-
-súgó az adminnnak!

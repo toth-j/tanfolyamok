@@ -257,8 +257,9 @@ A részletes manuális tesztelési esetek és a tesztelési folyamat leírása a
 
 **Megjegyzések**:
 
+* Ha az adatbázis már tartalmaz megőrzendő adatokat, akkor az adatbázisfájlt a tesztek futtatása előtt célszerű átnevezni.
+* Utána egy új adatbázisba be kell tölteni a tesztadatokat a tesztadatok.sql futtatásával.
 * A tesztek futtatása előtt győződj meg róla, hogy a szerver fut.
 * Az admin funkciók teszteléséhez először be kell jelentkezni.
-* Ha az adatbázis már tartalmaz megőrzendő adatokat, akkor az adatbázisfájlt a tesztek futtatása előtt célszerű átnevezni.
 
 A tesztek futtatását a `tests/test_execution_log.xlsx` fájlban dokumentáljuk.

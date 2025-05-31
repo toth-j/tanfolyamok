@@ -130,6 +130,7 @@ Adminisztrációs funkciók tesztesetei
 1. Az "Új csoport felvétele" űrlap mezői törlődnek.
 2. A "Csoportok listája" frissül, és az új csoport megjelenik a listában a megadott adatokkal és 0 fő létszámmal.
 3. Nincs hibaüzenet.
+4. Az új csoport az adatbázisba is bekerül.
 
 * * *
 
@@ -247,6 +248,7 @@ Adminisztrációs funkciók tesztesetei
 
 1. A felhasználó visszairányításra kerül a `csoportok.html` oldalra.
 2. A `csoportok.html` oldalon a `csid=1` csoport adatai frissültek a megadott új értékekkel (Beosztás, Ár).
+3. A módosítás az adatbázisban is megtörténik.
 
 * * *
 
@@ -270,7 +272,7 @@ Adminisztrációs funkciók tesztesetei
 
 **Elvárt eredmény:**
 
-1. Egy felugró ablak (alert) jelenik meg hibaüzenettel (pl. "Hiba a csoport módosításakor: Az ár nem lehet negatív." az API válasza alapján).
+1. Egy felugró ablak (alert) jelenik meg hibaüzenettel (pl. "Hiba a csoport módosításakor: Az ár nem lehet negatív."
 2. A felhasználó a `modosit.html` oldalon marad.
 3. Az űrlap mezőiben a bevitt (hibás) érték marad.
 
@@ -327,6 +329,7 @@ Adminisztrációs funkciók tesztesetei
 1. A megerősítő párbeszédablak megjelenik.
 2. A csoport eltávolításra kerül a "Csoportok listája" táblázatból.
 3. Nincs hibaüzenet.
+4. A törlés az adatbázisban is megtörténik.
 
 * * *
 
@@ -487,12 +490,13 @@ Adminisztrációs funkciók tesztesetei
 2. A "Jelentkezők listája" frissül, és az új jelentkező megjelenik a listában a megadott adatokkal.
 3. A "Létszám" frissül 7 főre.
 4. Nincs hibaüzenet.
+5. Az új jelentkező az adatbázisba is bekerül.
 
 * * *
 
 **Teszt ID:** ADM_TC_017
 
-**Teszt megnevezése:** Jelentkezők - Új jelentkező hozzáadása - Érvénytelen adatok (pl. túl rövid név)
+**Teszt megnevezése:** Jelentkezők - Új jelentkező hozzáadása - Már jelentkezett ezzel az email-lel
 
 **Előfeltételek:**
 
@@ -502,24 +506,23 @@ Adminisztrációs funkciók tesztesetei
 
 **Lépések:**
 
-1. Töltse ki az "Új jelentkező felvétele" űrlapot, de a "Név" mezőbe csak 3 karaktert írjon.
-2. A többi mezőt töltse ki érvényesen.
-3. Kattintson a "Hozzáad" gombra.
+1. Töltse ki az "Új jelentkező felvétele" űrlapot ugyanúgy, mint az előző tesztben.
+2. Kattintson a "Hozzáad" gombra.
 
 **Tesztadatok:**
 
-* Név: Tes
-* Születési név: Teszt Elek
-* Születési idő: 1992-02-02
-* Születési hely: Hibafalva
-* Anyja neve: Próba Petra
-* Lakcím: 4000 Hibafalva, Rossz út 10.
-* Telefonszám: +36209876543
-* Email: tes@example.com
+* Név: Admin Tesztelő
+* Születési név: Admin Tesztelő
+* Születési idő: 1990-05-15
+* Születési hely: Próbaváros
+* Anyja neve: Minta Anna
+* Lakcím: 1234 Tesztváros, Minta utca 7.
+* Telefonszám: +36301234567
+* Email: adminteszter@example.com
 
 **Elvárt eredmény:**
 
-1. Egy felugró ablak (alert) jelenik meg a "Hibás név! (5-60 karakter lehet)" hibaüzenettel.
+1. Egy felugró ablak (alert) jelenik meg a "Hiba: 409 Ezzel az e-mail címmel már jelentkeztek ebbe a csoportba." hibaüzenettel.
 2. Az űrlap mezői nem ürülnek ki.
 3. Az új jelentkező nem kerül hozzáadásra a listához.
 4. A létszám nem változik.
@@ -547,7 +550,7 @@ Adminisztrációs funkciók tesztesetei
 
 **Elvárt eredmény:**
 
-1. Egy felugró ablak (alert) jelenik meg a "A csoport betelt!" hibaüzenettel.
+1. Egy felugró ablak (alert) jelenik meg a "Hiba: 409 A csoport megtelt, maximum 8 fő jelentkezhet." hibaüzenettel.
 2. Az űrlap mezői nem ürülnek ki.
 3. Az új jelentkező nem kerül hozzáadásra a listához.
 4. A létszám nem változik (marad 8 fő).
@@ -651,6 +654,7 @@ Adminisztrációs funkciók tesztesetei
 
 1. A felhasználó visszairányításra kerül a `jelentkezok.html` oldalra (a `sessionStorage.csid=1` alapján a `csid=1` csoport jelentkezőihez).
 2. A `jelentkezok.html` oldalon a `jid=1` jelentkező adatai frissültek a megadott új értékekkel (Lakcím, Email).
+3. A módosítások az adatbázisba is bekerülnek.
 
 * * *
 
@@ -674,7 +678,7 @@ Adminisztrációs funkciók tesztesetei
 
 **Elvárt eredmény:**
 
-1. Egy felugró ablak (alert) jelenik meg hibaüzenettel (pl. "Hiba a módosítás során: Hiányzó kötelező mezők..." az API válasza alapján).
+1. Egy felugró ablak (alert) jelenik meg hibaüzenettel (pl. "Hiba a módosítás során: Hiányzó kötelező mezők...".
 2. A felhasználó a `jmodosit.html` oldalon marad.
 3. Az űrlap mezőiben a bevitt (hibás) érték marad.
 
@@ -731,44 +735,7 @@ Adminisztrációs funkciók tesztesetei
 2. A jelentkező eltávolításra kerül a "Jelentkezők listája" táblázatból.
 3. A "Létszám" frissül 1 főre (ha előtte 2 volt és csak Nagy Béla lett törölve).
 4. Nincs hibaüzenet.
-
-* * *
-
-**Teszt ID:** ADM_TC_018A
-
-**Teszt megnevezése:** Jelentkezők - Új jelentkező hozzáadása - Csoport már elindult
-
-**Előfeltételek:**
-
-1. Sikeres admin bejelentkezés.
-2. A felhasználó a `jelentkezok.html` oldalon van.
-3. A `sessionStorage.csid` egy olyan csoportra van állítva, amelynek az indulási dátuma már a múltban van (pl. `csid=1` a `tesztadatok.sql`-ből, indulás: `2024-09-02`, feltételezve, hogy a teszt futtatásakor ez a dátum már elmúlt).
-4. A csoportnak van még szabad helye (pl. `csid=1` esetén 2/8 fő).
-
-**Lépések:**
-
-1. Töltse ki az "Új jelentkező felvétele" űrlap mezőit érvényes adatokkal.
-2. Kattintson a "Hozzáad" gombra.
-
-**Tesztadatok:**
-
-* Csoport ID (`sessionStorage.csid`): `1` (vagy más, már elindult, de nem telt csoport)
-* Jelentkező adatai:
-  * Név: Későn Érkező
-  * Születési név: Későn Érkező
-  * Születési idő: 1995-01-01
-  * Születési hely: Halasztó
-  * Anyja neve: Váró Vera
-  * Lakcím: 6789 Későfalva, Utolsó utca 1.
-  * Telefonszám: +36309998877
-  * Email: keso@example.com
-
-**Elvárt eredmény:**
-
-1. Egy felugró ablak (alert) jelenik meg a "A csoport már elindult, nem lehet új jelentkezőt hozzáadni!" (vagy hasonló, az API válasza alapján) hibaüzenettel.
-2. Az űrlap mezői nem ürülnek ki.
-3. Az új jelentkező nem kerül hozzáadásra a listához.
-4. A létszám nem változik.
+5. A törlés az adatbázisban is megtörténik.
 
 * * *
 

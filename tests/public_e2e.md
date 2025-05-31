@@ -1,5 +1,9 @@
 # Manuális felhasználói tesztesetek
 
+Készítette: Tóth József  
+Ellenőrizte: X.Y.  
+Utolsó módosítás: 2025. május 31.
+
 ## Bevezetés
 
 Ez a dokumentum a "Tanfolyamok" webalkalmazás nyilvános felhasználói felületének manuális teszteseteit tartalmazza. A tesztesetek célja annak ellenőrzése, hogy az alapvető funkciók megfelelően működnek-e a végfelhasználók számára.
@@ -7,7 +11,7 @@ Ez a dokumentum a "Tanfolyamok" webalkalmazás nyilvános felhasználói felüle
 ## Általános tesztelési környezet
 
 * **Böngésző:** Chrome inkognitó módban
-* **Backend elérhetőség:** A tesztek feltételezik, hogy a `http://localhost:5000` címen futó backend szerver elérhető és megfelelően működik a releváns végpontokon (`/public/csoportok`, `/public/jelentkezok`, `/admin`).
+* **Backend elérhetőség:** A tesztek feltételezik, hogy a `http://localhost:5000` címen futó backend szerver elérhető és megfelelően működik.
 
 ## Tesztesetek
 
@@ -117,6 +121,7 @@ Ez a dokumentum a "Tanfolyamok" webalkalmazás nyilvános felhasználói felüle
 * **Előfeltételek:**
     1. Az `index.html` oldal be van töltve.
     2. A backend (`http://localhost:5000/public/csoportok`) nem elérhető vagy hibát ad vissza.
+    Ehhez blokkolni kell a böngésző fejlesztői eszközök Network lapján az adott címet.
 * **Tesztlépések:**
     1. Navigáljon a "Jelentkezés" szekcióhoz.
     2. Figyelje meg az "Induló csoportok" táblázatot.
@@ -133,7 +138,6 @@ Ez a dokumentum a "Tanfolyamok" webalkalmazás nyilvános felhasználói felüle
 * **Előfeltételek:**
     1. Az `index.html` oldal be van töltve.
     2. Az "Induló csoportok" táblázat sikeresen betöltődött. A `tesztadatok.sql` alapján a `csid=4` csoportnak 2 szabad helye van, a `csid=5` csoportnak 8.
-    3. A `kozos.js` `ellenoriz()` funkciója az adott inputot érvényesnek tekinti.
     4. A backend (`http://localhost:5000/public/jelentkezok`) elérhető és készen áll a POST kérések fogadására.
 * **Tesztlépések:**
     1. Adjon meg egy érvényes "Csoport azonosítója"-t, ahol van szabad hely (pl. 4 vagy 5).
@@ -148,7 +152,7 @@ Ez a dokumentum a "Tanfolyamok" webalkalmazás nyilvános felhasználói felüle
     10. Jelölje be a "Vállalom a tandíj befizetését." jelölőnégyzetet.
     11. Kattintson a "Jelentkezem" gombra.
 * **Elvárt eredmény:**
-    1. Az `uzenet` elemben a szerver által küldött sikeres üzenet jelenik meg (az API specifikáció alapján: "Sikeres jelentkezés!").
+    1. Az `uzenet` elemben a szerver által küldött sikeres üzenet jelenik meg ("Sikeres jelentkezés!").
     2. A "Jelentkezem" gomb letiltódik.
     3. Az "Induló csoportok" táblázat frissül (a kiválasztott csoportnál a "Szabad hely" csökkenhet).
     4. A böngésző konzoljában nincs hiba.
@@ -185,7 +189,7 @@ Ez a dokumentum a "Tanfolyamok" webalkalmazás nyilvános felhasználói felüle
 
 **TC_PUB_014: Jelentkezés nem létező csoportba**
 
-* **Leírás:** Ellenőrzi a rendszer viselkedését, ha a megadott csoportazonosítóval nem létezik csoport. (API teszt: `postPublicJelentkezoNemLetezoCsoport`)
+* **Leírás:** Ellenőrzi a rendszer viselkedését, ha a megadott csoportazonosítóval nem létezik csoport.
 * **Előfeltételek:**
     1. Az `index.html` oldal be van töltve.
     2. Minden egyéb űrlapmező helyesen van kitöltve, a jelölőnégyzet be van jelölve.
@@ -198,7 +202,7 @@ Ez a dokumentum a "Tanfolyamok" webalkalmazás nyilvános felhasználói felüle
     5. Ellenőrizze a böngésző konzolját.
 * **Elvárt eredmény:**
     1. Az `uzenet` elemben a "Ebbe a csoportba nem lehet jelentkezni." üzenet jelenik meg.
-    2. A böngésző konzoljában hibaüzenet látható (pl. "Hiba jelentkezéskor: 400").
+    2. A böngésző konzoljában hibaüzenet látható ("Hiba jelentkezéskor: Ebbe a csoportba nem lehet jelentkezni.").
     3. A "Jelentkezem" gomb aktív marad.
 
 **TC_PUB_015: Jelentkezés már elindult csoportba**
@@ -216,8 +220,8 @@ Ez a dokumentum a "Tanfolyamok" webalkalmazás nyilvános felhasználói felüle
     4. Kattintson a "Jelentkezem" gombra.
     5. Ellenőrizze a böngésző konzolját.
 * **Elvárt eredmény:**
-    1. Az `uzenet` elemben a "ebbe a csoportba nem lehet jelentkezni." üzenet jelenik meg.
-    2. A böngésző konzoljában hibaüzenet látható (pl. "Hiba jelentkezéskor: 409").
+    1. Az `uzenet` elemben az "Ebbe a csoportba nem lehet jelentkezni." üzenet jelenik meg.
+    2. A böngésző konzoljában hibaüzenet látható ("Hiba jelentkezéskor: Ebbe a csoportba nem lehet jelentkezni.").
     3. A "Jelentkezem" gomb aktív marad.
 
 **TC_PUB_016: Jelentkezés teli csoportba**
@@ -236,14 +240,14 @@ Ez a dokumentum a "Tanfolyamok" webalkalmazás nyilvános felhasználói felüle
     5. Ellenőrizze a böngésző konzolját.
 * **Elvárt eredmény:**
     1. Az `uzenet` elemben "A csoport megtelt, maximum 8 fő jelentkezhet." üzenet jelenik meg.
-    2. A böngésző konzoljában hibaüzenet látható (pl. "Hiba jelentkezéskor: 409").
+    2. A böngésző konzoljában hibaüzenet látható (pl. "Hiba jelentkezéskor: A csoport megtelt, maximum 8 fő jelentkezhet").
     3. A "Jelentkezem" gomb aktív marad.
 
 **TC_PUB_017: Dupla jelentkezés ugyanabba a csoportba ugyanazzal az e-mail címmel**
 
 * **Leírás:** Ellenőrzi, hogy a rendszer kezeli-e, ha egy felhasználó ugyanazzal az e-mail címmel próbál meg ismételten jelentkezni ugyanarra a csoportra.
 * **Előfeltételek:**
-    1. Egy sikeres jelentkezés már megtörtént egy adott csoportba (pl. `csid=4`) egy adott e-mail címmel (pl. `teszt.elek.uj@example.com` a `TC_PUB_011` végrehajtása után, vagy a `tesztadatok.sql`-ből `toth.krisztina@gmail.com` a `csid=4`-hez).
+    1. Egy sikeres jelentkezés már megtörtént egy adott csoportba (pl. `csid=4`) egy adott e-mail címmel a `TC_PUB_011` végrehajtása után.
     2. Az `index.html` oldal be van töltve.
     3. Az "Induló csoportok" táblázat sikeresen betöltődött.
     4. A backend (`http://localhost:5000/public/jelentkezok`) elérhető.
@@ -256,10 +260,9 @@ Ez a dokumentum a "Tanfolyamok" webalkalmazás nyilvános felhasználói felüle
     6. Kattintson a "Jelentkezem" gombra.
     7. Ellenőrizze a böngésző konzolját.
 * **Elvárt eredmény:**
-    1. Az `uzenet` elemben a "Hálózati hiba vagy a szerver nem válaszol." üzenet jelenik meg.
-    2. A böngésző konzoljában hibaüzenet látható (pl. "Hiba jelentkezéskor: 409").
-    3. A szerver válasza (hálózati fülön ellenőrizhető) várhatóan tartalmazza a `{ "message": "Ezzel az e-mail címmel már jelentkeztek erre a csoportra." }` üzenetet.
-    4. A "Jelentkezem" gomb aktív marad.
+    1. Az `uzenet` elemben az "Ezzel az e-mail címmel már jelentkeztek erre a csoportra." üzenet jelenik meg.
+    2. A böngésző konzoljában hibaüzenet látható (pl. "Hiba jelentkezéskor: Ezzel az e-mail címmel már jelentkeztek erre a csoportra.").
+    3. A "Jelentkezem" gomb aktív marad.
 
 ### 4. Adminisztrátori bejelentkezési kísérlet (a nyilvános oldalról)
 
