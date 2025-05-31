@@ -1,5 +1,8 @@
 const csid = sessionStorage.csid
 document.getElementById("csid").innerHTML = csid
+if (!sessionStorage.token) {
+    document.location.replace("index.html")
+}
 const token = 'Bearer ' + sessionStorage.token
 let letszam
 const max = 8
@@ -15,10 +18,10 @@ async function jelentkezok() {
                 'Authorization': token
             }
         });
-        if (!response.ok) {
-            throw new Error(response.status);
-        }
         const json = await response.json();
+        if (!response.ok) {
+            throw new Error(`${response.status} ${json.message}`);
+        }
         tabla.innerHTML = "<tr><th>Név</th><th>Születési név</th><th>Idő</th>"
             + "<th>Hely</th><th>Anyja neve</th><th>Cím</th><th>Telefon</th>"
             + "<th>email</th><th>&nbsp;</th><th>&nbsp;</th><th>&nbsp;</th></tr>";
@@ -43,7 +46,6 @@ async function jelentkezok() {
 }
 
 document.getElementById("hozzaad").onclick = async function (e) {
-    e.preventDefault()
     const url = 'http://localhost:5000/public/jelentkezok';
     const payload = {
         "csid": Number(csid),
@@ -78,7 +80,7 @@ document.getElementById("hozzaad").onclick = async function (e) {
 
 function modosit(jid) {
     sessionStorage.jid = jid
-    window.location = "jmodosit.html"
+    window.location.href = "jmodosit.html"
 }
 
 async function torol(jid) {
@@ -103,5 +105,5 @@ document.getElementById("vissza").onclick = function () {
 
 document.getElementById("kijelentkezes").onclick = function () {
     delete sessionStorage.token
-    document.location.href = "index.html"
+    document.location.replace("index.html")
 }

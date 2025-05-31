@@ -7,7 +7,7 @@ Ez a dokumentum a "Tanfolyamok" webalkalmazás nyilvános felhasználói felüle
 ## Általános tesztelési környezet
 
 * **Böngésző:** Chrome inkognitó módban
-* **Backend Elérhetőség:** A tesztek feltételezik, hogy a `http://localhost:5000` címen futó backend szerver elérhető és megfelelően működik a releváns végpontokon (`/public/csoportok`, `/public/jelentkezok`, `/admin`).
+* **Backend elérhetőség:** A tesztek feltételezik, hogy a `http://localhost:5000` címen futó backend szerver elérhető és megfelelően működik a releváns végpontokon (`/public/csoportok`, `/public/jelentkezok`, `/admin`).
 
 ## Tesztesetek
 

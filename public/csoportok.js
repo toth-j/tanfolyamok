@@ -1,9 +1,13 @@
+if (!sessionStorage.token) {
+    document.location.replace("index.html")
+}
+const token = 'Bearer ' + sessionStorage.token;
+const url = 'http://localhost:5000/admin/csoportok';
+
 document.getElementById("datum").value = new Date().toISOString().slice(0, 10)
 csoportok()
 
 async function csoportok() {
-    const url = 'http://localhost:5000/admin/csoportok';
-    const token = 'Bearer ' + sessionStorage.token;
     const tabla = document.getElementById("csoportok");
     try {
         const response = await fetch(url, {
@@ -12,10 +16,10 @@ async function csoportok() {
                 'Authorization': token
             }
         });
-        if (!response.ok) {
-            throw new Error(response.status);
-        }
         const json = await response.json();
+        if (!response.ok) {
+            throw new Error(`${response.status} ${json.message}`);
+        }
         tabla.innerHTML = `<tr><th>Azon</th><th>Képzés</th><th>Indulás</th><th>Beosztás</th><th>Helyszín</th>
                            <th>Ár (Ft)</th><th>Fő</th><th>&nbsp;</th><th>&nbsp;</th><th>&nbsp;</th></tr>`;
         json.forEach(cs => {
@@ -40,8 +44,6 @@ async function csoportok() {
 }
 
 document.getElementById("hozzaad").onclick = async function (e) {
-    const url = 'http://localhost:5000/admin/csoportok';
-    const token = 'Bearer ' + sessionStorage.token;
     const payload = {
         "kid": document.getElementById("kepzes").value,
         "indulas": document.getElementById("datum").value,
@@ -58,9 +60,9 @@ document.getElementById("hozzaad").onclick = async function (e) {
             },
             body: JSON.stringify(payload)
         });
-        const responseData = await response.json();
+        const data = await response.json();
         if (!response.ok) {
-            throw new Error(response.status + ' ' + responseData.message);
+            throw new Error(response.status + ' ' + data.message);
         }
         document.querySelector("form").reset();
         csoportok();
@@ -115,4 +117,9 @@ async function torol(csid) {
         console.error("Hiba a törlés során:", err);
         alert(err.message);
     }
+}
+
+document.getElementById("kijelentkezes").onclick = function () {
+    delete sessionStorage.token
+    document.location.replace("index.html")
 }

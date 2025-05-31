@@ -7,10 +7,10 @@ async function csoportok() {
     const tabla = document.getElementById("csoportok");
     try {
         const response = await fetch(url);
-        if (!response.ok) {
-            throw new Error(response.status);
-        }
         const json = await response.json();
+        if (!response.ok) {
+            throw new Error(`${response.status} ${json.message}`);
+        }
         adatok = json;
         tabla.innerHTML = "<tr><th>Azonosító</th><th>Képzés</th><th>Indulás</th>"
             + "<th>Beosztás</th><th>Szabad hely</th><th>Ár (Ft)</th></tr>";
@@ -27,10 +27,6 @@ async function csoportok() {
 
 document.getElementById("jelentkezemGomb").onclick = async function (e) {
     let valasz = ellenoriz();
-    // Ellenőrizzük, hogy a "tandij" jelölőnégyzet be van-e jelölve.
-    if (!valasz && !document.getElementById("tandij").checked) {
-        valasz = "Kérjük, jelölje fogadja el a fizetési feltételt a pipa bejelölésével!";
-    }
     const uzenetElem = document.getElementById("uzenet");
     uzenetElem.innerHTML = valasz;
     if (valasz) return;
@@ -55,11 +51,11 @@ document.getElementById("jelentkezemGomb").onclick = async function (e) {
             },
             body: JSON.stringify(payload)
         });
-        const responseData = await response.json();
+        const data = await response.json();
         if (!response.ok) {
-            throw new Error(responseData.message)
+            throw new Error(data.message)
         }
-        uzenetElem.innerHTML = responseData.message;
+        uzenetElem.innerHTML = data.message;
         document.getElementById("jelentkezemGomb").disabled = true;
         csoportok();
     } catch (err) {
@@ -86,6 +82,7 @@ document.getElementById("login").onclick = async function (e) {
         if (!response.ok) {
             throw new Error(response.status);
         }
+        document.getElementById("password").value = ""
         sessionStorage.token = json.token
         document.location.href = "csoportok.html"
     } catch (err) {
@@ -102,7 +99,7 @@ function ellenoriz() {
     // hiányzó dátum
     let d = document.getElementById("szulido").value;
     if (d == "") return "Add meg a születési időt!";
-    // 18 évnél fiatalabb
+    // kor 18-65 között
     let szev = d.substring(0, 4);
     let ev = new Date().getFullYear();
     if (szev >= ev - 18 || szev <= ev - 65)
@@ -123,5 +120,8 @@ function ellenoriz() {
     let telefon = document.getElementById("telefon").value.trim();
     if (telefon.length < 8 || telefon.length > 15)
         return "Hibás telefonszám! (8-15 karakter lehet)"
+    // Ellenőrizzük, hogy a "tandij" jelölőnégyzet be van-e jelölve.
+    if (!document.getElementById("tandij").checked) 
+        return "Kérjük, fogadja el a fizetési feltételt a pipa bejelölésével!";
     return "";
 }

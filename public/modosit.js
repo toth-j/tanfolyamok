@@ -1,10 +1,13 @@
+if (!sessionStorage.token) {
+    document.location.href = "index.html"
+}
+const token = 'Bearer ' + sessionStorage.token;
 const csid = sessionStorage.csid
+const url = `http://localhost:5000/admin/csoportok/${csid}`;
 document.getElementById("csid").innerHTML = csid
 betolt()
 
 async function betolt() {
-    const url = `http://localhost:5000/admin/csoportok/${csid}`;
-    const token = 'Bearer ' + sessionStorage.token;
     try {
         const response = await fetch(url, {
             method: 'GET',
@@ -12,10 +15,10 @@ async function betolt() {
                 'Authorization': token
             }
         });
-        if (!response.ok) {
-            throw new Error(response.status);
-        }
         const json = await response.json();
+        if (!response.ok) {
+            throw new Error(response.status + ' ' + json.message);
+        }
         document.getElementById("kepzes").selectedIndex = json.kid - 1;
         document.getElementById("datum").value = json.indulas;
         document.getElementById("beosztas").value = json.beosztas;
@@ -23,14 +26,11 @@ async function betolt() {
         document.getElementById("ar").value = json.ar;
     } catch (err) {
         console.error("Hiba a csoportadatok betöltésekor:", err.message);
-        alert(`Hiba a csoportadatok betöltésekor: ${err.message}. Kérjük, ellenőrizze a kapcsolatot vagy próbálja újra később.`);
+        alert(`Hiba a csoportadatok betöltésekor: ${err.message}. Kérjük, próbálja újra később.`);
     }
 }
 
 document.getElementById("modosit").onclick = async function (e) {
-    const url = `http://localhost:5000/admin/csoportok/${csid}`;
-    const token = 'Bearer ' + sessionStorage.token;
-
     const kidValue = document.getElementById("kepzes").value;
     const indulasValue = document.getElementById("datum").value;
     const beosztasValue = document.getElementById("beosztas").value.trim();
@@ -65,16 +65,11 @@ document.getElementById("modosit").onclick = async function (e) {
     }
 };
 
-document.getElementById("kijelentkezes").onclick = function () {
-    delete sessionStorage.token
-    document.location.href = "index.html"
-}
-
 document.getElementById("vissza").onclick = function () {
     document.location.href = "csoportok.html"
 }
 
 document.getElementById("kijelentkezes").onclick = function () {
     delete sessionStorage.token
-    document.location.href = "index.html"
+    document.location.replace("index.html")
 }

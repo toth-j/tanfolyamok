@@ -1,10 +1,13 @@
-const jid = sessionStorage.jid
-document.getElementById("jid").innerHTML = jid
+if (!sessionStorage.token) {
+    document.location.replace("index.html")
+}
 const token = 'Bearer ' + sessionStorage.token
+const jid = sessionStorage.jid
+const url = 'http://localhost:5000/admin/jelentkezok/' + jid;
+document.getElementById("jid").innerHTML = jid
 betolt()
 
 async function betolt() {
-    const url = 'http://localhost:5000/admin/jelentkezok/' + jid;
     try {
         const response = await fetch(url, {
             method: 'GET',
@@ -12,10 +15,10 @@ async function betolt() {
                 'Authorization': token
             }
         });
-        if (!response.ok) {
-            throw new Error(`Hiba! Státusz: ${response.status}`);
-        }
         const json = await response.json();
+        if (!response.ok) {
+            throw new Error(`${response.status} ${json.message}`);
+        }
         document.getElementById("jnev").value = json.jnev;
         document.getElementById("szulnev").value = json.szulnev || '';
         document.getElementById("szulido").value = json.szulido;
@@ -31,7 +34,6 @@ async function betolt() {
 }
 
 document.getElementById("modosit").onclick = async function (e) {
-    const url = 'http://localhost:5000/admin/jelentkezok/' + jid;
     const payload = {
         "csid": Number(sessionStorage.csid),
         "jnev": document.getElementById("jnev").value,
@@ -71,5 +73,5 @@ document.getElementById("vissza").onclick = function () {
 
 document.getElementById("kijelentkezes").onclick = function () {
     delete sessionStorage.token
-    document.location.href = "index.html"
+    document.location.replace("index.html")
 }
