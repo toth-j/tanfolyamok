@@ -86,12 +86,14 @@ Az iskola dolgozói számára elérhető, jelszóval védett felület.
 #### 3.2.2. Csoportok kezelése
 
 * **Listázás (`GET /admin/csoportok`)**
+  
   * Az összes rendszerben lévő csoport listázása táblázatos formában.
   * Megjelenített adatok: Csoportazonosító, Képzés neve, Indulás dátuma, Beosztás, Helyszín, Ár, Aktuális létszám.
   * A lista indulási dátum szerint csökkenő sorrendben jelenik meg.
   * Minden csoport mellett műveleti gombok: "Jelentkezők", "Módosítás", "Törlés".
 
 * **Létrehozás (`POST /admin/csoportok`)**
+  
   * Űrlap új csoport adatainak megadására: Képzés típusa (kiválasztás listából), Indulás dátuma, Beosztás, Helyszín, Ár.
   * **Validációk:**
     * Minden kötelező mező kitöltése.
@@ -100,6 +102,7 @@ Az iskola dolgozói számára elérhető, jelszóval védett felület.
   * Sikeres létrehozás után a csoportlista frissül.
 
 * **Módosítás (`GET /admin/csoportok/:csid`, `PUT /admin/csoportok/:csid`)**
+  
   * A kiválasztott csoport adatainak betöltése egy szerkesztő űrlapra.
   * Az űrlapon módosíthatók a csoport adatai (Képzés típusa, Indulás dátuma, Beosztás, Helyszín, Ár).
   * **Validációk mentéskor:**
@@ -109,14 +112,16 @@ Az iskola dolgozói számára elérhető, jelszóval védett felület.
   * Sikeres módosítás után visszanavigálás a csoportlistához, ahol a frissített adatok láthatók.
 
 * **Törlés (`DELETE /admin/csoportok/:csid`)**
+  
   * Csoport törlése azonosító alapján.
   * **Feltétel:** Csoport csak akkor törölhető, ha nincsenek hozzárendelt aktív jelentkezők. Ezt a rendszer ellenőrzi (pl. a `/admin/lista/:csid` lekérdezésével a frontend oldalon, illetve a backend oldalon adatbázis idegen kulcs kényszerrel).
   * Törlés előtt megerősítő kérdés.
   * Sikeres törlés után a csoportlista frissül.
 
-#### 3.2.3. Jelentkezők Kezelése
+#### 3.2.3. Jelentkezők kezelése
 
 * **Listázás (`GET /admin/lista/:csid`)**
+  
   * Egy kiválasztott csoporthoz tartozó összes jelentkező listázása táblázatos formában.
   * Megjelenített adatok: Jelentkező neve, Születési adatok, Cím, Elérhetőségek.
   * A lista a jelentkező neve szerint ábécé sorrendben jelenik meg.
@@ -124,12 +129,14 @@ Az iskola dolgozói számára elérhető, jelszóval védett felület.
   * Az oldalon kijelzésre kerül a csoport aktuális és maximális létszáma.
 
 * **Létrehozás (manuális, admin által - `POST /public/jelentkezok`)**
+  
   * Űrlap új jelentkező adatainak megadására egy adott csoporthoz.
   * Az űrlap adatai megegyeznek a publikus jelentkezési űrlapéval.
   * **Validációk:** Hasonlóak a publikus jelentkezéshez (kötelező mezők, csoport létezik, email egyediség csoportonként, csoport nem telt be, csoport nem indult el).
   * Sikeres létrehozás után a jelentkezők listája frissül.
 
 * **Módosítás (`GET /admin/jelentkezok/:jid`, `PUT /admin/jelentkezok/:jid`)**
+  
   * A kiválasztott jelentkező adatainak betöltése egy szerkesztő űrlapra.
   * Az űrlapon módosíthatók a jelentkező adatai (beleértve azt is, hogy melyik csoporthoz tartozik - `csid`).
   * **Validációk mentéskor:**
@@ -139,6 +146,7 @@ Az iskola dolgozói számára elérhető, jelszóval védett felület.
   * Sikeres módosítás után visszanavigálás a jelentkezők listájához, ahol a frissített adatok láthatók.
 
 * **Törlés (`DELETE /admin/jelentkezok/:jid`)**
+  
   * Jelentkező törlése azonosító alapján.
   * Törlés előtt megerősítő kérdés.
   * Sikeres törlés után a jelentkezők listája frissül.
