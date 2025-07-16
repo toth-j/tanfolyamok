@@ -40,9 +40,9 @@ CREATE TABLE IF NOT EXISTS `csoportok` (
 INSERT INTO `csoportok` (`csid`, `kid`, `indulas`, `beosztas`, `helyszin`, `ar`) VALUES
 (1, 1, '2024-09-08', 'szerda-péntek 17-20 óráig', 'tanterem', 390000),
 (2, 1, '2024-09-11', 'szombatonként 10-16 óráig', 'online', 290000),
-(3, 2, '2025-09-07', 'szerda-péntek 17-20 óráig', 'tanterem', 390000),
-(4, 2, '2025-09-10', 'szombatonként 10-16 óráig', 'online', 290000),
-(5, 3, '2025-09-10', 'szombatonként 10-16 óráig', 'online', 490000);
+(3, 2, '2026-01-07', 'szerda-péntek 17-20 óráig', 'tanterem', 390000),
+(4, 2, '2026-04-10', 'szombatonként 10-16 óráig', 'online', 290000),
+(5, 3, '2026-09-10', 'szombatonként 10-16 óráig', 'online', 490000);
 
 --
 -- Tábla szerkezet ehhez a táblához `jelentkezok`
