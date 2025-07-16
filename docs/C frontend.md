@@ -4,22 +4,23 @@ Ez a dokumentáció a tanfolyamkezelő alkalmazás frontend részének működé
 
 ## Tartalomjegyzék
 
-1. [Használt technológiák](#használt-technológiák)
-2. [Általános működés](#általános-működés)
-3. [HTML fájlok leírása](#html-fájlok-leírása)
-   * [public/index.html](#publicindexhtml)
-   * [public/csoportok.html](#publiccsoportokhtml)
-   * [public/jelentkezok.html](#publicjelentkezokhtml)
-   * [public/modosit.html](#publicmodosithtml)
-   * [public/jmodosit.html](#publicjmodosithtml)
-4. [JavaScript fájlok leírása](#javascript-fájlok-leírása)
-   * [public/index.js](#publicindexjs)
-   * [public/csoportok.js](#publiccsoportokjs)
-   * [public/jelentkezok.js](#publicjelentkezokjs)
-   * [public/modosit.js](#publicmodositjs)
-   * [public/jmodosit.js](#publicjmodositjs)
-5. [Frontend futtatása](#frontend-futtatása)
-6. [Manuális tesztelés](#manuális-tesztelés)
+- [Frontend fejlesztői dokumentáció](#frontend-fejlesztői-dokumentáció)
+  - [Tartalomjegyzék](#tartalomjegyzék)
+  - [Használt technológiák](#használt-technológiák)
+  - [Általános működés](#általános-működés)
+  - [HTML fájlok leírása](#html-fájlok-leírása)
+    - [**`public/index.html`**](#publicindexhtml)
+    - [**`public/csoportok.html`**](#publiccsoportokhtml)
+    - [**`public/jelentkezok.html`**](#publicjelentkezokhtml)
+    - [**`public/modosit.html`**](#publicmodosithtml)
+  - [JavaScript fájlok leírása](#javascript-fájlok-leírása)
+    - [**`public/index.js`**](#publicindexjs)
+    - [**`public/csoportok.js`**](#publiccsoportokjs)
+    - [**`public/jelentkezok.js`**](#publicjelentkezokjs)
+    - [**`public/modosit.js`**](#publicmodositjs)
+    - [**`public/jmodosit.js`**](#publicjmodositjs)
+  - [Frontend futtatása](#frontend-futtatása)
+  - [Manuális tesztelés](#manuális-tesztelés)
 
 ## Használt technológiák
 
@@ -107,21 +108,6 @@ A frontend kommunikál egy backend API-val (alapértelmezetten `http://localhos
     * Az űrlap mezőit a `modosit.js` tölti fel a `/admin/csoportok/{csid}` API végpontról lekért aktuális csoportadatokkal.
     * "Módosítás" gomb (`#modosit`), amely elindítja a csoport adatainak frissítését a `modosit.js` segítségével.
 * **Interakciók:** A `modosit.js` kezeli a kiválasztott csoport adatainak betöltését az űrlapba, az adatok módosításának elküldését a szerver felé, valamint a kijelentkezést és a vissza navigációt.
-
-### **`public/jmodosit.html`**
-
-* **Kapcsolódó JavaScript:** `public/jmodosit.js`
-* **Célja:** Adminisztrációs felület egy kiválasztott jelentkező adatainak módosítására.
-* **Fontosabb elemek és funkciók:**
-  * **Kijelentkezés gomb (`#kijelentkezes`):** Adminisztrátori kijelentkezés.
-  * **Vissza gomb (`#vissza`):** Visszanavigál a `jelentkezok.html` oldalra.
-  * **Jelentkező azonosító kijelzése:** A `jmodosit.js` dinamikusan írja bele a `sessionStorage`-ből olvasott jelentkezőazonosítót.
-  * **Jelentkező módosítása űrlap (`<form>`):**
-    * Input mezők a jelentkező adatainak (név, születési adatok, cím, elérhetőségek) megjelenítésére és módosítására.
-    * Az űrlap mezőit a `jmodosit.js` tölti fel a `/admin/jelentkezok/{jid}` API végpontról lekért aktuális jelentkezőadatokkal.
-    * "Módosítás" gomb (`#modosit`), amely elindítja a jelentkező adatainak frissítését a `jmodosit.js` segítségével.
-    * Egy bekezdés (`<p id="uzenet">`) a hibaüzenetek megjelenítésére.
-* **Interakciók:** A `jmodosit.js` kezeli a kiválasztott jelentkező adatainak betöltését az űrlapba, az adatok módosításának elküldését a szerver felé, valamint a kijelentkezést és a vissza navigációt.
 
 * * *
 

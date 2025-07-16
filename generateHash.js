@@ -1,6 +1,6 @@
 const bcrypt = require('bcrypt');
 
-const passwordToHash = 'TanfAdmin!2025';
+const passwordToHash = 'TanfAdmin!2025'; // admin jelszó
 const saltRounds = 10; // Ez az ajánlott "cost factor"
 
 try {

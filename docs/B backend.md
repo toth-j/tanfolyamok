@@ -4,37 +4,39 @@ Ez a dokumentum a Tanfolyamok alkalmazás backend API-jának fejlesztői dokumen
 
 ## Tartalomjegyzék
 
-1. [Bevezetés](#1-bevezetés)
-2. [Telepítés és futtatás](#2-telepítés-és-futtatás)
-   * [Előfeltételek](#előfeltételek)
-   * [Konfiguráció](#konfiguráció)
-   * [Indítás](#indítás)
-   * [Adatbázis inicializálása](#adatbázis-inicializálása)
-3. [Adatbázis séma](#3-adatbázis-séma)
-   * [kepzesek tábla](#kepzesek-tábla)
-   * [csoportok tábla](#csoportok-tábla)
-   * [jelentkezok tábla](#jelentkezok-tábla)
-4. [Authentikáció (Admin API)](#4-authentikáció-admin-api)
-5. [API Végpontok](#5-api-végpontok)
-   * [Publikus API](#publikus-api)
-     * [GET /public/csoportok](#get-publiccsoportok)
-     * [POST /public/jelentkezok](#post-publicjelentkezok)
-   * [Admin API](#admin-api)
-     * [POST /admin (Bejelentkezés)](#post-admin-bejelentkezés)
-     * [GET /admin/csoportok](#get-admincsoportok)
-     * [POST /admin/csoportok](#post-admincsoportok)
-     * [GET /admin/csoportok/:csid](#get-admincsoportokcsid)
-     * [PUT /admin/csoportok/:csid](#put-admincsoportokcsid)
-     * [DELETE /admin/csoportok/:csid](#delete-admincsoportokcsid)
-     * [GET /admin/lista/:csid](#get-adminlistacsid)
-     * [GET /admin/jelentkezok/:jid](#get-adminjelentkezokjid)
-     * [PUT /admin/jelentkezok/:jid](#put-adminjelentkezokjid)
-     * [DELETE /admin/jelentkezok/:jid](#delete-adminjelentkezokjid)
-6. [Tesztelés](#6-tesztelés)
-   * [Előfeltételek a teszteléshez](#előfeltételek-a-teszteléshez)
-   * [Tesztfájlok](#tesztfájlok)
-   * [Tesztek futtatása](#tesztek-futtatása)
-   * [Tesztesetek felépítése](#tesztesetek-felépítése)
+- [Tanfolyamok alkalmazás backend dokumentáció](#tanfolyamok-alkalmazás-backend-dokumentáció)
+  - [Tartalomjegyzék](#tartalomjegyzék)
+  - [1. Bevezetés](#1-bevezetés)
+  - [2. Telepítés és futtatás](#2-telepítés-és-futtatás)
+    - [Előfeltételek](#előfeltételek)
+    - [Konfiguráció](#konfiguráció)
+    - [Adatbázis inicializálása](#adatbázis-inicializálása)
+    - [Indítás](#indítás)
+  - [3. Adatbázis séma](#3-adatbázis-séma)
+    - [`kepzesek` tábla](#kepzesek-tábla)
+    - [`csoportok` tábla](#csoportok-tábla)
+    - [`jelentkezok` tábla](#jelentkezok-tábla)
+  - [4. Authentikáció (Admin API)](#4-authentikáció-admin-api)
+  - [5. API végpontok](#5-api-végpontok)
+    - [Publikus API](#publikus-api)
+      - [GET `/public/csoportok`](#get-publiccsoportok)
+      - [POST `/public/jelentkezok`](#post-publicjelentkezok)
+    - [Admin API](#admin-api)
+      - [POST `/admin` (Bejelentkezés)](#post-admin-bejelentkezés)
+      - [GET `/admin/csoportok`](#get-admincsoportok)
+      - [POST `/admin/csoportok`](#post-admincsoportok)
+      - [GET `/admin/csoportok/:csid`](#get-admincsoportokcsid)
+      - [PUT `/admin/csoportok/:csid`](#put-admincsoportokcsid)
+      - [DELETE `/admin/csoportok/:csid`](#delete-admincsoportokcsid)
+      - [GET `/admin/lista/:csid`](#get-adminlistacsid)
+      - [GET `/admin/jelentkezok/:jid`](#get-adminjelentkezokjid)
+      - [PUT `/admin/jelentkezok/:jid`](#put-adminjelentkezokjid)
+      - [DELETE `/admin/jelentkezok/:jid`](#delete-adminjelentkezokjid)
+  - [6. Tesztelés](#6-tesztelés)
+    - [Előfeltételek a teszteléshez](#előfeltételek-a-teszteléshez)
+    - [Tesztfájlok](#tesztfájlok)
+    - [Tesztek futtatása](#tesztek-futtatása)
+    - [Tesztesetek felépítése](#tesztesetek-felépítése)
 
 ## 1. Bevezetés
 
@@ -84,16 +86,6 @@ A backend Node.js és Express.js alapon működik, és SQLite adatbázist haszn�
 
    * `TOKEN_SECRET`: Egyedi, titkos karaktersorozat a JWT tokenek aláírásához.
 
-### Indítás
-
-Az alkalmazás indítása:
-
-```bash
-node app.js
-```
-
-A szerver alapértelmezetten az `5000`-es porton indul.
-
 ### Adatbázis inicializálása
 
 Az alkalmazás indításkor automatikusan létrehozza a `tanfolyamok.db` SQLite adatbázis fájlt és a szükséges táblákat, valamint az indexeket, ha azok még nem léteznek.
@@ -103,6 +95,16 @@ A `tesztadatok.sql` fájl tartalmazza a kezdeti tesztadatokat. Ezeket manuálisa
 ```bash
 sqlite3 tanfolyamok.db < tesztadatok.sql
 ```
+
+### Indítás
+
+Az alkalmazás indítása:
+
+```bash
+node app.js
+```
+
+A szerver alapértelmezetten az `5000`-es porton indul.
 
 ## 3. Adatbázis séma
 

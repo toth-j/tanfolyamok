@@ -1,14 +1,11 @@
 require('dotenv').config();
 const express = require("express");
 const app = express();
-app.use(express.json());
-const cors = require("cors");
-app.use(cors());
 const bcrypt = require('bcrypt');
 const jwt = require("jsonwebtoken");
 const Database = require('better-sqlite3');
-const path = require("path");
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.json());
+app.use(express.static('public'));
 
 // Adatbázis kapcsolat inicializálása
 const db = new Database('tanfolyamok.db', { /*verbose: console.log*/ });
@@ -296,7 +293,7 @@ app.get("/admin/jelentkezok/:jid", authenticateToken, function (req, res) {
     }
 });
 
-// módosítja egy jelentkező adatait
+// egy jelentkező adatainak módosítása
 app.put("/admin/jelentkezok/:jid", authenticateToken, function (req, res) {
     const { jid } = req.params;
     const { csid, jnev, szulnev, szulido, szulhely, anyjaneve, cim, telefon, email } = req.body;
@@ -358,6 +355,7 @@ app.delete("/admin/jelentkezok/:jid", authenticateToken, function (req, res) {
     }
 });
 
-app.listen(5000, function () {
-    console.log("Server elindítva az 5000-es porton...");
-});
+app.listen(5000, () => console.log("Server elindítva az 5000-es porton..."))
+process.on('exit', () => db.close());
+process.on('SIGINT', () => process.exit());
+process.on('SIGTERM', () => process.exit());
