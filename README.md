@@ -35,7 +35,7 @@ Ezen kívül kell egy felület, ahol az iskola dolgozója kezelheti a csoportok 
 ### Indítás
 
 * A szerver indítása: `npm start` vagy `node server.js`
-* Az alkalmazás elérhető lesz a `http://localhost:5000` címen).
+* Az alkalmazás elérhető lesz a [http://localhost:5000]() címen).
 
 ## Dokumentáció
 
