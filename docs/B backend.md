@@ -90,10 +90,10 @@ A backend Node.js és Express.js alapon működik, és SQLite adatbázist haszn�
 
 Az alkalmazás indításkor automatikusan létrehozza a `tanfolyamok.db` SQLite adatbázis fájlt és a szükséges táblákat, valamint az indexeket, ha azok még nem léteznek.
 
-A `tesztadatok.sql` fájl tartalmazza a kezdeti tesztadatokat. Ezeket manuálisan futtathatja egy SQLite böngészővel vagy az `sqlite3` parancssori eszközzel a `tanfolyamok.db` fájlon, miután az létrejött:
+A `tesztadatok.sql` fájl tartalmazza a kezdeti tesztadatokat. Ezeket manuálisan futtathatja egy SQLite szerkesztővel vagy az `sqlite3` parancssori eszközzel a `tanfolyamok.db` fájlon, miután az létrejött:
 
 ```bash
-sqlite3 tanfolyamok.db < tesztadatok.sql
+sqlite3 tanfolyamok.db < tests/tesztadatok.sql
 ```
 
 ### Indítás

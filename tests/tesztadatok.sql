@@ -1,4 +1,4 @@
--- database: tanfolyamok.db
+-- database: ../tanfolyamok.db
 -- Engedélyezzük a foreign key kényszereket SQLite-ban (munkamenetenként szükséges lehet)
 PRAGMA foreign_keys = ON;
 
